@@ -67,7 +67,7 @@ public class Fraction implements java.lang.Comparable<Fraction> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(num, denum);
+        return (int) this.FloatRes()*1000000000;
     }
 
     @Override
