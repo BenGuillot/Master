@@ -1,8 +1,10 @@
+// CLEMENT A MODIFIE CE FICHIER
+
 package com.company;
 
 public class Fraction {
-    private int num;
-    private int denum;
+    private final int num;
+    private final int denum;
 
     public Fraction(int pnum, int pdenum){
         this.num = pnum;
