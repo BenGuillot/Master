@@ -1,3 +1,5 @@
+// CLEMENT A MODIFIE CE FICHIER
+
 package com.company;
 
 import java.util.Objects;
@@ -8,8 +10,9 @@ public class Fraction implements java.lang.Comparable<Fraction> {
 
     public static final Fraction UN = new Fraction(1, 1);
 
-    private int num;
-    private int denum;
+    private final int num;
+    private final int denum;
+
 
     public Fraction(int pnum, int pdenum){
         this.num = pnum;
