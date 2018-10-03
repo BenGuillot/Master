@@ -1,6 +1,13 @@
 package com.company;
 
-public class Fraction {
+import java.util.Objects;
+
+public class Fraction implements java.lang.Comparable<Fraction> {
+
+    public static final Fraction ZERO = new Fraction(0, 1);
+
+    public static final Fraction UN = new Fraction(1, 1);
+
     private int num;
     private int denum;
 
@@ -37,20 +44,33 @@ public class Fraction {
         return this.num+" / "+this.denum+" = "+this.FloatRes();
     }
 
-    public boolean isEqual(Fraction pFraction){
-        int pFDenum = pFraction.getDenum();
-        int pFNum = pFraction.getNum();
-        if(pFDenum % this.denum == 0 && pFNum % this.num == 0)
-            return true;
-        return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Fraction)) return false;
+        Fraction fraction = (Fraction) o;
+        int pnum, pdenum;
+        if(fraction.getNum() > num)
+             pnum = fraction.getNum() % num;
+        else
+            pnum = num % fraction.getNum();
+        if(fraction.getDenum() > denum)
+            pdenum = fraction.getDenum() % denum;
+        else
+            pdenum = denum % fraction.getDenum();
+        return pdenum == 0 &&
+               pnum == 0;
     }
 
-    public String BiggerOrLower (Fraction pFraction){
-        if(pFraction.FloatRes() > this.FloatRes())
-            return pFraction.toString() + " is bigger than "+ this.toString();
-        else if (pFraction.FloatRes() < this.FloatRes())
-            return pFraction.toString() + " is lower than "+ this.toString();
-        else
-            return pFraction.toString() + " is equal to "+ this.toString();
+    @Override
+    public int hashCode() {
+        return Objects.hash(num, denum);
+    }
+
+    @Override
+    public int compareTo(Fraction fraction) {
+        long nOd = ((long) num) * fraction.denum;
+        long dOn = ((long) denum) * fraction.num;
+        return (nOd < dOn) ? -1 : ((nOd > dOn) ? +1 : 0);
     }
 }
