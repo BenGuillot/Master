@@ -9,7 +9,7 @@ public class Fichier extends Basic {
 
     @Override
     public int getTaille(){
-        return 0;
+        return this.taille;
     }
 
 }
