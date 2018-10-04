@@ -8,10 +8,13 @@ public class Repertoire extends Basic {
     private ArrayList<Repertoire> repertoires;
 
     public Repertoire(String pnom) {
+
         this.nom = pnom;
         this.taille = 0;
         this.fichiers = new ArrayList<Fichier>();
         this.repertoires = new ArrayList<Repertoire>();
+       this.pere = null;
+
     }
 
 
@@ -20,24 +23,55 @@ public class Repertoire extends Basic {
         return true;
     }
 
-    public boolean ajoutRepertoire(Repertoire r) {
-        if (r == this)
+    public boolean ajoutRepertoire (Repertoire r)
+    {
+      if (r == this)
             return false;
-        else {
-            repertoires.add(r);
-            return true;
-        }
+    	
+    	r.pere = this;
+    	
+        if (r == this) {return false; }
+        
+        boolean a = testNom (r, r.pere);
+       if (a == true) {
+        		repertoires.add(r);
+        		System.out.println("Repertoire ajouté");
+        		return true;
+        	}
+       else { 
+    	   System.out.println("Nom de repertoire pere : erreur");
+    	   return false; }
+    }
+    
+
+    
+    public boolean testNom (Repertoire r, Repertoire p)
+    {
+    	 while (p == null)
+    	 {
+    		 
+    		 if (r.nom == p.nom) 
+    		 {System.out.println("Nom de repertoire pere : erreur");
+    		 return false; }
+    		 
+    		testNom (r,r.pere);
+    	
+    	 }
+    	 return true;
     }
 
     public int nbFichiers() {
         int taille = this.fichiers.size();
-        //System.out.println("Il y a " + taille + " fichiers dans " + this.nom );
+        System.out.println("Il y a " + taille + " fichier");
         return taille;
     }
 
-    public int nbRepertoires() {
-        int taille = this.repertoires.size();
-        //System.out.println("Il y a " + taille + " repertoires dans " + this.nom);
+    public int nbRepertoires ()
+    {
+        int taille = 1;
+        int i = 0;
+      
+        System.out.println("Il y a " + taille + " repertoires");
         return taille;
     }
 

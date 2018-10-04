@@ -4,6 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+
         System.out.println("test");
         Fichier f1 = new Fichier("f1");
         Fichier f2 = new Fichier("f2");
@@ -27,5 +28,6 @@ public class Main {
         System.out.print("\nR4 : \n");
         System.out.print(r4.getTaille());
         System.out.print("\nBOUYAAAAAAH");
+
     }
 }
