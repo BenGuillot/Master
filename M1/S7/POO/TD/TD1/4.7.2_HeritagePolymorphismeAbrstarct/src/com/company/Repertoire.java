@@ -2,29 +2,31 @@ package com.company;
 import java.util.ArrayList;
 
 
-public class Repertoire extends Basic{
+public class Repertoire extends Basic {
 
     private ArrayList<Fichier> fichiers;
     private ArrayList<Repertoire> repertoires;
-    private Repertoire pere;
 
+    public Repertoire(String pnom) {
 
-    public Repertoire(String pnom, int ptaille) {
         this.nom = pnom;
-        this.taille = ptaille;
+        this.taille = 0;
         this.fichiers = new ArrayList<Fichier>();
         this.repertoires = new ArrayList<Repertoire>();
        this.pere = null;
+
     }
 
-    public boolean ajoutFichier (Fichier f)
-    {
+
+    public boolean ajoutFichier(Fichier f) {
         fichiers.add(f);
         return true;
     }
 
     public boolean ajoutRepertoire (Repertoire r)
     {
+      if (r == this)
+            return false;
     	
     	r.pere = this;
     	
@@ -58,8 +60,7 @@ public class Repertoire extends Basic{
     	 return true;
     }
 
-    public int nbFichiers ()
-    {
+    public int nbFichiers() {
         int taille = this.fichiers.size();
         System.out.println("Il y a " + taille + " fichier");
         return taille;
@@ -76,8 +77,13 @@ public class Repertoire extends Basic{
 
     @Override
     public int getTaille() {
-        return this.taille;
+
+        if (this.repertoires.isEmpty())
+            return 1 + this.fichiers.size();
+        for (int i = 0; i < this.repertoires.size(); i++) {
+            return 1 + this.fichiers.size() + this.repertoires.get(i).getTaille();
+        }
+        return 1;
     }
-
-
 }
+

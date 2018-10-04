@@ -2,14 +2,13 @@ package com.company;
 
 public class Fichier extends Basic {
 
-    public Fichier(String pnom, int ptaille) {
+    public Fichier(String pnom) {
         this.nom = pnom;
-        this.taille = ptaille;
     }
 
     @Override
     public int getTaille(){
-        return this.taille;
+        return 1;
     }
 
 }
