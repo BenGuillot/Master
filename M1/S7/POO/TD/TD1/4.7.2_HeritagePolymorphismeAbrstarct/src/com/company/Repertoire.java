@@ -8,12 +8,13 @@ public class Repertoire extends Basic{
     private ArrayList<Repertoire> repertoires;
     private Repertoire pere;
 
+
     public Repertoire(String pnom, int ptaille) {
         this.nom = pnom;
         this.taille = ptaille;
         this.fichiers = new ArrayList<Fichier>();
         this.repertoires = new ArrayList<Repertoire>();
-        this.pere = this;
+       this.pere = null;
     }
 
     public boolean ajoutFichier (Fichier f)
@@ -24,11 +25,12 @@ public class Repertoire extends Basic{
 
     public boolean ajoutRepertoire (Repertoire r)
     {
-    	System.out.println("Repertoire ajouté");
+    	
     	r.pere = this;
+    	
         if (r == this) {return false; }
-        System.out.println("Repertoire ajouté");
-        boolean a = testNom (r);
+        
+        boolean a = testNom (r, r.pere);
        if (a == true) {
         		repertoires.add(r);
         		System.out.println("Repertoire ajouté");
@@ -39,13 +41,19 @@ public class Repertoire extends Basic{
     	   return false; }
     }
     
-    public boolean testNom (Repertoire r)
+
+    
+    public boolean testNom (Repertoire r, Repertoire p)
     {
-    	 while (this.pere != null)
+    	 while (p == null)
     	 {
-    		 if (r.nom == this.nom) {return false; }
     		 
-    		testNom (r.pere);
+    		 if (r.nom == p.nom) 
+    		 {System.out.println("Nom de repertoire pere : erreur");
+    		 return false; }
+    		 
+    		testNom (r,r.pere);
+    	
     	 }
     	 return true;
     }

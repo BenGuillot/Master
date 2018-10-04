@@ -15,7 +15,9 @@ public class Main {
         B.ajoutRepertoire(D);
         
         
-        Repertoire E = new Repertoire ("R1", 0);
+        Repertoire E = new Repertoire ("R3", 0);
+        Repertoire F = new Repertoire ("R1", 0);
         B.ajoutRepertoire(E);
+        E.ajoutRepertoire(F);
     }
 }
