@@ -41,14 +41,18 @@ public class Repertoire extends Basic{
 
     public int nbRepertoires ()
     {
-        int taille = this.repertoires.size();
+        int taille = 1;
+        int i = 0;
+        while (i != this.repertoires.size()) {
+        	
+        }
         System.out.println("Il y a " + taille + " repertoires");
         return taille;
     }
 
     @Override
     public int getTaille() {
-        return 0;
+        return this.taille;
     }
 
 
