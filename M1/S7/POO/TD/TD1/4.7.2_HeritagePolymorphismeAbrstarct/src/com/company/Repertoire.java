@@ -24,12 +24,14 @@ public class Repertoire extends Basic{
 
     public boolean ajoutRepertoire (Repertoire r)
     {
-        if (r == this)
-            return false;
-        else {
-            repertoires.add(r);
-            return true;
-        }
+        if (r == this) {return false; }
+        if (r.nom == this.nom) {return false; }
+        if (r.nom == this.pere.nom) { return false; }
+        while ()
+        	else {
+        		repertoires.add(r);
+        		return true;
+        	}
     }
 
     public int nbFichiers ()
@@ -43,9 +45,7 @@ public class Repertoire extends Basic{
     {
         int taille = 1;
         int i = 0;
-        while (i != this.repertoires.size()) {
-        	
-        }
+      
         System.out.println("Il y a " + taille + " repertoires");
         return taille;
     }
