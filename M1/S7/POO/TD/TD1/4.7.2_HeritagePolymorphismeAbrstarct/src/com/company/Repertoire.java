@@ -2,7 +2,7 @@ package com.company;
 import java.util.ArrayList;
 
 
-public class Repertoire extends Basic{
+public class Repertoire extends Basic {
 
     private ArrayList<Fichier> fichiers;
     private ArrayList<Repertoire> repertoires;
@@ -15,15 +15,12 @@ public class Repertoire extends Basic{
     }
 
 
-
-    public boolean ajoutFichier (Fichier f)
-    {
+    public boolean ajoutFichier(Fichier f) {
         fichiers.add(f);
         return true;
     }
 
-    public boolean ajoutRepertoire (Repertoire r)
-    {
+    public boolean ajoutRepertoire(Repertoire r) {
         if (r == this)
             return false;
         else {
@@ -32,44 +29,27 @@ public class Repertoire extends Basic{
         }
     }
 
-    public int nbFichiers ()
-    {
+    public int nbFichiers() {
         int taille = this.fichiers.size();
         //System.out.println("Il y a " + taille + " fichiers dans " + this.nom );
         return taille;
     }
 
-    public int nbRepertoires ()
-    {
+    public int nbRepertoires() {
         int taille = this.repertoires.size();
         //System.out.println("Il y a " + taille + " repertoires dans " + this.nom);
         return taille;
     }
 
     @Override
-    public void getTaille() {
+    public int getTaille() {
 
-        if (this.repertoires.isEmpty()){
-            this.taille += this.nbFichiers();
+        if (this.repertoires.isEmpty())
+            return 1 + this.fichiers.size();
+        for (int i = 0; i < this.repertoires.size(); i++) {
+            return 1 + this.fichiers.size() + this.repertoires.get(i).getTaille();
         }
-        else {
-            if (!this.repertoires.isEmpty()){
-                this.taille += this.repertoires.size();
-                for (int i = 0; i < this.repertoires.size(); i ++)
-                   this.repertoires.get(i).getTaille();
-            }
-            if (!this.fichiers.isEmpty()){
-                this.taille += this.nbFichiers();
-            }
-        }
-        System.out.print(this.taille + "\n");
+        return 1;
     }
-
-    /*else {
-            for(int j = 0; j<=this.repertoires.size(); j++) {
-                return this.repertoires.get(j).nbRepertoires() +
-                        this.repertoires.get(j).nbFichiers() +
-                        this.repertoires.get(j).getTaille();
-            }
-        }*/
 }
+

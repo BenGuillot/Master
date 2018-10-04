@@ -5,7 +5,7 @@ public abstract class Basic {
     protected String nom;
     protected int taille;
 
-    abstract void getTaille();
+    abstract int getTaille();
 
     public String getNom() {
         return nom;
