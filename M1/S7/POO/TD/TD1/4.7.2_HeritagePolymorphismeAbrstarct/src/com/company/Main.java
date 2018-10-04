@@ -13,5 +13,9 @@ public class Main {
         B.nbFichiers();
         Repertoire D = new Repertoire("R2", 0);
         B.ajoutRepertoire(D);
+        
+        
+        Repertoire E = new Repertoire ("R1", 0);
+        B.ajoutRepertoire(E);
     }
 }
