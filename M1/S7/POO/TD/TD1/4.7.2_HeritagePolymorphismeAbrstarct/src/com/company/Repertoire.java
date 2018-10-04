@@ -6,6 +6,7 @@ public class Repertoire extends Basic {
 
     private ArrayList<Fichier> fichiers;
     private ArrayList<Repertoire> repertoires;
+    private Repertoire pere;
 
     public Repertoire(String pnom) {
 
@@ -13,7 +14,7 @@ public class Repertoire extends Basic {
         this.taille = 0;
         this.fichiers = new ArrayList<Fichier>();
         this.repertoires = new ArrayList<Repertoire>();
-       this.pere = null;
+        this.pere = null;
 
     }
 
