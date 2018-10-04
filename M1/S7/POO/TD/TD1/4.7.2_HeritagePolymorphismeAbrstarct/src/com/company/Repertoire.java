@@ -45,16 +45,13 @@ public class Repertoire extends Basic{
     
     public boolean testNom (Repertoire r, Repertoire p)
     {
-    	 while (p == null)
-    	 {
-    		 
-    		 if (r.nom == p.nom) 
-    		 {System.out.println("Nom de repertoire pere : erreur");
-    		 return false; }
-    		 
-    		testNom (r,r.pere);
-    	
-    	 }
+    		 if (r.nom == p.nom){
+    			 System.out.println("Nom de repertoire pere : erreur");
+    			 return false; 
+    		 }
+    		if(p.pere != null)
+    			testNom (r, p.pere);
+    	 
     	 return true;
     }
 
