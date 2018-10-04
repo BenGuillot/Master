@@ -6,15 +6,15 @@ public class Repertoire extends Basic{
 
     private ArrayList<Fichier> fichiers;
     private ArrayList<Repertoire> repertoires;
-    private Repertoire pere;
 
     public Repertoire(String pnom, int ptaille) {
         this.nom = pnom;
         this.taille = ptaille;
         this.fichiers = new ArrayList<Fichier>();
         this.repertoires = new ArrayList<Repertoire>();
-        this.pere = this;
     }
+
+    
 
     public boolean ajoutFichier (Fichier f)
     {
@@ -48,8 +48,12 @@ public class Repertoire extends Basic{
 
     @Override
     public int getTaille() {
+
+        if (this.repertoires.isEmpty())
+            return 1;
+        for(int j = 0; j<this.repertoires.size(); j++)
+            return 1 + this.repertoires.get(j).getTaille();
+
         return 0;
     }
-
-
 }

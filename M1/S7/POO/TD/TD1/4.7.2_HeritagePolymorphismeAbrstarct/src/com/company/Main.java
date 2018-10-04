@@ -13,5 +13,7 @@ public class Main {
         B.nbFichiers();
         Repertoire D = new Repertoire("R2", 0);
         B.ajoutRepertoire(D);
+        System.out.print(B.getTaille());
+        System.out.print(D.getTaille());
     }
 }
