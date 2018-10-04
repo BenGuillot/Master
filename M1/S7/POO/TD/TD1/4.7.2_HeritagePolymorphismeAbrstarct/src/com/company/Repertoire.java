@@ -47,7 +47,7 @@ public class Repertoire extends Basic{
     }
 
     @Override
-    public int getTaille() {
+    public void getTaille() {
 
         if (this.repertoires.isEmpty()){
             this.taille += this.nbFichiers();
@@ -56,13 +56,13 @@ public class Repertoire extends Basic{
             if (!this.repertoires.isEmpty()){
                 this.taille += this.repertoires.size();
                 for (int i = 0; i < this.repertoires.size(); i ++)
-                    this.repertoires.get(i).getTaille();
+                   this.repertoires.get(i).getTaille();
             }
             if (!this.fichiers.isEmpty()){
                 this.taille += this.nbFichiers();
             }
         }
-        return this.taille;
+        System.out.print(this.taille + "\n");
     }
 
     /*else {

@@ -8,8 +8,8 @@ public class Fichier extends Basic {
     }
 
     @Override
-    public int getTaille(){
-        return this.taille;
+    public void getTaille(){
+        System.out.print(this.taille + "\n");
     }
 
 }

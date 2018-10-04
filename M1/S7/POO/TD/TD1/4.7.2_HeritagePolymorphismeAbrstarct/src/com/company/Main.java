@@ -18,6 +18,6 @@ public class Main {
         r2.ajoutRepertoire(r3);
         r2.ajoutRepertoire(r4);
         r3.ajoutFichier(f1);
-        System.out.print(r1.getTaille());
+        r1.getTaille();
     }
 }
