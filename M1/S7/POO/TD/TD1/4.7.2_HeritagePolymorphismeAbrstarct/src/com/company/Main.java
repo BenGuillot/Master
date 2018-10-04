@@ -5,15 +5,19 @@ public class Main {
     public static void main(String[] args) {
 
         System.out.println("test");
-        Fichier A = new Fichier("f1", 2);
-        Repertoire B = new Repertoire("R1", 0);
-        Fichier C = new Fichier("f2", 2);
-        B.ajoutFichier(A);
-        B.ajoutFichier(C);
-        B.nbFichiers();
-        Repertoire D = new Repertoire("R2", 0);
-        B.ajoutRepertoire(D);
-        System.out.print(B.getTaille());
-        System.out.print(D.getTaille());
+        Fichier f1 = new Fichier("f1", 2);
+        Fichier f2 = new Fichier("f2", 2);
+        Repertoire r1 = new Repertoire("R1");
+        Repertoire r2 = new Repertoire("R2");
+        Repertoire r3 = new Repertoire("R3");
+        Repertoire r4 = new Repertoire("R4");
+        r1.ajoutFichier(f1);
+        r1.ajoutFichier(f2);
+        r1.ajoutRepertoire(r2);
+        r2.ajoutFichier(f1);
+        r2.ajoutRepertoire(r3);
+        r2.ajoutRepertoire(r4);
+        r3.ajoutFichier(f1);
+        System.out.print(r1.getTaille());
     }
 }
