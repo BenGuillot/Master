@@ -27,7 +27,7 @@ public class Main {
         System.out.print(r3.getTaille());
         System.out.print("\nR4 : \n");
         System.out.print(r4.getTaille());
-        System.out.print("\nBOUYAAAAAAH");
+
 
     }
 }

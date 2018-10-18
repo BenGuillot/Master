@@ -14,7 +14,7 @@ public class Repertoire extends Basic{
         this.nom = pnom;
         this.taille = 0;
         this.fichiers = new ArrayList<Fichier>();
-        this.repertoires = new ArrayList<Repertoire>();
+        this.repertoires = new ArrayList<Repertoire >();//utiliser la classe abstraire pour stacker les elements
         this.pere = null;
 
 
