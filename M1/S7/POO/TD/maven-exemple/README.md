@@ -1,3 +1,7 @@
+﻿
+Executer avec mvn package -DskipTests
+definir variable d’environnement java sur jdk 8
+
 # Exemple de projet Maven/Java
 
 ## Étape 1 : initialiser le projet

@@ -1,7 +1,7 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-class CompteBancaireTest {
+public class CompteBancaireTest {
 
     @Test
     public void testNotNull() {
@@ -19,7 +19,7 @@ class CompteBancaireTest {
     @Test
     public void testSuperieurSolde() {
         CompteBancaire cpte = new CompteBancaire(-3);
-        System.out.print("le compte sera a découvert");
+        System.out.print("le compte sera a découvert\n");
     }
 
     @Test
@@ -33,7 +33,7 @@ class CompteBancaireTest {
     public void testCreditNegatif() {
         CompteBancaire cpte = new CompteBancaire(3);
         cpte.crediteSolde(-1);
-        System.out.print("le montant est négatif");
+        System.out.print("le montant est négatif\n");
     }
 
     @Test
@@ -47,14 +47,14 @@ class CompteBancaireTest {
     public void testDebitNegatif() {
         CompteBancaire cpte = new CompteBancaire(3);
         cpte.debiteSolde(-1);
-        System.out.print("Le montant est négatif");
+        System.out.print("Le montant est négatif\n");
     }
 
     @Test
     public void testDebitSuperieurSolde() {
         CompteBancaire cpte = new CompteBancaire(3);
         cpte.debiteSolde(5);
-        System.out.print("le compte sera a découvert");
+        System.out.print("le compte sera a découvert\n");
     }
 
     @Test
@@ -72,7 +72,7 @@ class CompteBancaireTest {
         CompteBancaire cpte1 = new CompteBancaire(300);
         CompteBancaire cpte2 = new CompteBancaire(800);
         cpte1.virement(-100, cpte2);
-        System.out.print("Le montant est négatif");
+        System.out.print("Le montant est négatif\n");
     }
 
     @Test
@@ -80,6 +80,6 @@ class CompteBancaireTest {
         CompteBancaire cpte1 = new CompteBancaire(300);
         CompteBancaire cpte2 = new CompteBancaire(800);
         cpte1.virement(1000, cpte2);
-        System.out.print("Le compte sera a découvert");
+        System.out.print("Le compte sera a découvert\n");
     }
 }
