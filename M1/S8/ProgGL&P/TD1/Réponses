@@ -1,0 +1,24 @@
+TD 1 :
+			///////////////////////
+			///// Section 3.5 /////
+			///////////////////////
+
+Exo 3.1 :
+1. Il y a 2 responsabilités : 
+	- Responsabilité d'afficher les coordonnées de l'employés
+	- Responsabilité de calculer le salaire de l'employé.
+2. On doit changer l'ensemble de la classe Employe pour changer le calcul du salaire.
+3. Il faut changer l'ensemble de la classe Employe pour changer l'affichage et écrire dans un  fichier CSV. C'est ajouter des méthodes d'affichages dans une classe qui n'y est pas destinée.
+4. Il faudrait séparer en deux classes le calcul du salaire / informations sur l'employé et une classe pour l'affichage.
+
+Exo 2 : Que de l'implémentation
+
+Exo 3 :
+Le robot statique ne peut pas avancer, donc pas la peine d'ajouter une méthode avancer(). Donc la hiérarchie porposée ne convient pas. Idée, inverser la hiérarchie (Robot est une sorte de cas particulier de RobotStatique).
+
+Exo 4 : passer vite fait ...
+
+Exo 5 : Ici, on dépends d'un affichage alors qu'on se trouve dans un haut niveau d'abstraction.
+Il faudrait faire une interface de Métier pour pouvoir ensuite faire un affichage dans une autre classe.
+
+
