@@ -2,6 +2,15 @@ package Test;
 
 import java.io.IOException;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import Annuaire.Personne;
+import Annuaire.PersonneDAO;
+
+import static org.junit.Assert.*;
+
 public class PersonneDAOTest {
 
 	@BeforeClass
