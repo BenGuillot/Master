@@ -1,8 +1,9 @@
 //Implementation fault attack against DES
 #include <stdio.h>
 #include <gmp.h>
+#include<stdint.h>
 
-int E(int R, int K){
+int E(int R, int K){//R = 32 bits, K= 48 bits
 	int RES = R * K;
 	//renvoyer RES modifié par E 
 	int E[6][8] = 
@@ -17,10 +18,10 @@ int E(int R, int K){
 		28, 29, 30, 31, 31, 1
 	};
 
-	return 0;	
+	return 0;	//48 bits
 }
 
-int S(int E){
+int S(int E){ //48 bits
 	//S BOX
 	int S1[16][4], S2[16][4], S3[16][4], S4[16][4], S5[16][4], S6[16][4], S7[16][4], S8[16][4];
 
@@ -75,9 +76,10 @@ int S(int E){
 
 	//decouper E en 8 * 6 bits 
 	//utiliser ces blocs dans les S box
+	//SORTIE 32 bits
 }
 
-int P(int S){
+int P(int S){ //32 bits
 
 	int P[4][8] = 
 	{
@@ -89,14 +91,44 @@ int P(int S){
 		32,	27,	3,	9,
 		19,	13,	30,	6,
 		22,	11,	4,	25
-	}
-}
+	};
+	return 0;
+} //32 bits
 
 int main (){
 	
-	printf("hello world! \n");
-	E(1, 1);
+
+
 	//P(S(E(R,K)))*P(S(E(RF,K)));
 
-	return 0;
+uint32_t x,y,a,b,c,p,q;
+int mask1=1;
+int mask2=32;
+printf("enter any no.:");
+scanf("%d",&x);
+y=x&mask1;
+printf("y=%d\n",y);
+a=x&mask2;
+printf("a=%d\n",a);
+b=a>>4;
+printf("b=%d\n",b);
+c=y|b;
+printf("row no :%d\n",c);
+int mask3=0x1E;
+p=x&mask3;
+printf("p=%d\n",p);
+q=p>>1;
+printf("column no: %d\n",q);
+static const uint32_t s[4][16] =
+{
+  14,  0,  4, 15, 13,  7,  1,  4,  2, 14, 15,  2, 11, 13,  8,  1,
+   3, 10, 10,  6,  6, 12, 12, 11,  5,  9,  9,  5,  0,  3,  7,  8,
+   4, 15,  1, 12, 14,  8,  8,  2, 13,  4,  6,  9,  2,  1, 11,  7,
+  15,  5, 12, 11,  9,  3,  7, 14,  3, 10, 10,  0,  5,  6,  0, 13};
+int i,j;
+{
+printf("SBox subsequent value[%d][%d]=%d\n",c,q,s[c][q]);
+}
+return(0);
+	
 }
