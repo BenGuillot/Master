@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{mathtools,amssymb,amsthm}
 \usepackage{lmodern}
+\usepackage{ulem}
 \usepackage{multirow}
 \usepackage{array}
 \usepackage{longtable}
@@ -22,20 +23,81 @@
 	\newpage\clearpage\pagenumbering{arabic}
 	
 	\section{Question 1}
-	Une attaque par faute contre le DES consiste à introduire une modification sur un bit du chiffré durant l'exécution du chiffrement.
-	De ce fait si on dispose d'un chiffré correct et d'un chiffré fauté par l'attaque on peut obtenir des informations sur la clé utilisée pour le chiffrement.
-	En supposant que l'attaquant est capable d'effectuer une faute sur la valeur de sortie R15 du 15ème tour une attaque par faute peut être décrite de la façon suivante :\\
-	On suppose que l'erreur correspond est induite en effectuant l'operation XOR entre la valeur R14 et un E aléatoire de la taille de R14.\\
-	On obtient ainsi R14 XOR E = R14*.
-	Au tour suivant on aura donc :\\
-		L15 = R14* = L15*\\
-		R15 = L14 XOR f(R14*) = R15 XOR e' = R15*.\\
-	Au dernier tour L16 = R15* = R16* et R16 = L15* = R14*.\\
-	Après une dernière permutation $P^{-1}$ on obtient finalement le chiffré C XOR x = C*.\\
-	Si on a également un chiffré C non fauté alors on va pouvoir retrouver la sous-clé K15 utilisée par la fonction F pour R14 et à partir de la retrouver la clé K utilisée pour le chiffrement du message.
-		
-	\section{Question 2}
+	Une attaque par faute contre le DES consiste à introduire une modification sur un bit du chiffré durant l'exécution du chiffrement de manière a compromettre son execution.De ce fait si on dispose d'un chiffré correct et d'un chiffré fauté par l'attaque on peut obtenir des informations sur une partie de  la clé utilisée pour le chiffrement.
+	Lors d'une attaque par force brute (recherche exhaustive) sur la clé du DES, la complexité est de $2^{56}$. l'objectif de l'attaque par faute est de réduire cette complexitée.\\
+
+	En supposant que l'attaquant est capable d'effectuer une faute sur la valeur de sortie $R_{15}$ du $15_{ème}$ tour une attaque par faute peut être décrite de la façon suivante :\\
+	
+	
+	\begin{center}\includegraphics[scale=0.4]{DES_feistel.png}\end{center}
+	
+	Lors d'une utilisation normal de DES (sans attaque par faute), on obtiendrais les resultats suivant pour $L_{16}$ et $R_{16}$.\\
+	\begin{itemize}
+		\item $L_{16} = L_{15} \oplus F(R_{15}, K_{16})$
+		\item $R_{16} = R_{15}$
+	\end{itemize}
+	 
+	Maintenant, si on introduit une faute sur la valeur de sortie $R_{15}$ du $15_{ème}$ tour, on obtient les valeurs suivantes :\\
+	\begin{itemize}
+		\item $R_{15} = R_{15}^{*}$ 
+		\item $L_{16} = L_{16}^{*} = L_{15} \oplus F(R_{15}^{*}, K_{16})$
+		\item $	R_{16} = R_{15}^{*}$
+	\end{itemize}
+	
+	On a donc une possibilité de retrouver $K_{16}$ en utilisant $L_{16}$  et $L_{16}^{*}$.\\
+	On va donc utiliser l'operation XOR ($\oplus$) sur $L_{16}$  et $L_{16}^{*}$ de façon a obtenir :\\
+	$$L_{16}  \oplus L_{16}^{*} =  L_{15} \oplus F(R_{15}, K_{16}) \oplus  L_{15} \oplus F(R_{15}^{*}, K_{16}) $$\\
+	                          $$= \xout{L_{15} } \oplus F(R_{15}, K_{16}) \oplus  \xout{L_{15} } \oplus F(R_{15}^{*}, K_{16})$$\\
+	On se retrouve donc avec :\\
+	$$L_{16}  \oplus L_{16}^{*} = F(R_{15}, K_{16}) \oplus F(R_{15}^{*}, K_{16})$$\\
+	
+	Pour continuer l'attaque on va devoir étudier la fonction F plus en détail soit :\\
+	\\
+	\\ \\ \\ \\ 
+	$$F$$
+	\begin{center}\includegraphics[scale=0.4]{FonctionF.png}\end{center}
+	On constate qie la fonction F prend le bloc $R_{i - 1}$ de 32 bits en entrée ainsi que la clé $K_{i}$. $R_{i - 1}$ passe ensuite par la fonction  E qui a pour but d'appliquer une expansion sur le bloc, le passant de 32 à 48 bits.\\
+	Après l'expansion, l'opération XOR est appliquée entre $R_{i - 1}$ et $K_{i}$.\\
+	On a donc 48 bits , qui vont être "découpés" en 8 blocs de 6 bits. Chaque bloc va ensuite passer par une S-Box. Les S-Box prennent en entrée 6 bits et en renvoient 4, ce qui permet de ramener la nombre de bit à 32 (soit la taille initiale de $R_{i - 1}$).\\
+	Ce bloc de 32 bits va finalement subir une permutation, la sortie de cette permutation étant le resultat renvoyé par la fonction F.\\
+	On peut donc écrire l'équation $L_{16}  \oplus L_{16}^{*} = F(R_{15}, K_{16}) \oplus F(R_{15}^{*}, K_{16})$ de la façon suivante : \\
+	$$L_{16}  \oplus L_{16}^{*} = P(S(E(R_{15}, K_{16}))) \oplus P(S(E(R_{15}^{*}, K_{16})))$$
+	
+	On sait également d'après le schéma d'exécution de la fonction F qu'on peut isoler individuellement le résultat de chaque S-box, ce qui permet de  transformer cette équation.\\
+	$L_{16}  \oplus L_{16}^{*} = F(R_{15}, K_{16}) \oplus F(R_{15}^{*}, K_{16})$  devient :\\
+	$$L_{16} \oplus L_{16}^{*} = $$\\
+	$$P(S_{1}(E(R_{15},K_{16}^{0-5})) || S_{2}(E(R_{15},K_{16}^{6-11}))||...)$$\\
+	$$\oplus$$\\
+	$$P(S_{1}(E(R_{15}^{*},K_{16}^{0-5}))||S_{2}(E(R_{15}^{*},K_{16}^{6-11}))||...)$$\\
+	On peut se permettre d'écrire l'équation ainsi car le contenu des différentes S-box est connu, on peut donc à partir des 6 bits d'entrée trouver les bits de sortie correspondants (par ailleurs on peut également retrouver à partir des 4 bits de sortie d'une S-box plusieurs bloc de 6 bits d'entrée possible).\\
+	
+	Maintenant on souhaite se débarrasser de P dans notre équation, pour cela il suffit d'appliquer $P^{-1}$ à 	$L_{16}  \oplus L_{16}^{*}$ soit (possible car la permutation P est connue): \\
+	$$P^{-1} (L_{16}  \oplus L_{16}^{*}) = $$\\
+	$$S_{1}(E(R_{15},K_{16}^{0-5})) \oplus S_{1}(E(R_{15}^{*},K_{16}^{0-5}))
+	 || 
+	S_{2}(E(R_{15},K_{16}^{6-11})) \oplus S_{2}(E(R_{15}^{*},K_{16}^{6-11}))||$$
+	$$...$$\\
+	
+	On peut maintenant mettre en pratique le fait que l'on puisse retrouver les bits d'entrée des 6 box grâce aux bit de sortie pour utiliser cette équation sur les S-box.\\
+	On va diviser $P^{-1} (L_{16}  \oplus L_{16}^{*})$ en 8 blocs de 4 bits. Chaque bloc correspond donc à une sortie de S-box. 
+	On aura donc 8 équations :\\
+	\begin{itemize}
+		\item $P^{-1} (L_{16}  \oplus L_{16}^{*})_{0-3} = S_{1}(E(R_{15}, K_{16}))_{0-3} \oplus S_{1}(E(R_{15}^{*}, K_{16}))_{0-3} $
+		\item $P^{-1} (L_{16}  \oplus L_{16}^{*})_{4-7} = S_{2}(E(R_{15}, K_{16}))_{4-7} \oplus S_{2}(E(R_{15}^{*}, K_{16}))_{4-7} $
+		\item ...
+	\end{itemize}
+	$K_{16}$ est la seule inconnue de ces 8 équations. Chacune de ces équations va nous permettre de retrouver 6 bits de $K_{16}$, on va donc devoir faire une recherche exhaustive des bits de $K_{16}$ pour chaque S-box afin de retrouver les 48 bits de la sous-clé (6 bits par S-box).\\
+	On fera donc 8 recherches de 6 bits pour une complexité de $8 * 2^{6} $.
+	
+	\section{Question 2} 
 	\subsection{Décrire précisément ce que vous faites pour retrouver la clé}
+	Pour trouver la clé on va se servir du chiffré non fauté et le comparer à chacun des 32 chiffrés fauté.\\
+	Pour ce faire on va diviser chaque chiffré en 2 blocs de 32 bits chacun.\\
+	On aura donc un chiffré non fauté (C) sous la forme suivant :\\
+	1E F4 9F 41 || 6D 5D 57 8A \\
+	On va pour chaque chiffré fauté (FC) utiliser l'opération XOR entre le premier bloc de C et celui de FC afin de retrouver 32 bits qu'on nommera E'.\\
+	On effectue la même opération entre le second bloc de C et de FC afin de trouver 32 autres bits qu'on nommera E.\\
+	
 	\subsection{Donnez les 48 bits de clé que vous obtenez grâce à cette attaque par fautes}
 	
 	\section{Question 3}
