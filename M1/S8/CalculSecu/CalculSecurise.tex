@@ -86,17 +86,23 @@
 		\item $P^{-1} (L_{16}  \oplus L_{16}^{*})_{4-7} = S_{2}(E(R_{15}, K_{16}))_{4-7} \oplus S_{2}(E(R_{15}^{*}, K_{16}))_{4-7} $
 		\item ...
 	\end{itemize}
-	$K_{16}$ est la seule inconnue de ces 8 équations. Chacune de ces équations va nous permettre de retrouver 6 bits de $K_{16}$, on va donc devoir faire une recherche exhaustive des bits de $K_{16}$ pour chaque S-box afin de retrouver les 48 bits de la sous-clé (6 bits par S-box).\\
+	$K_{16}$ est la seule valeur inconnue dans ces 8 équations. Chacune de ces équations va nous permettre de retrouver 6 bits de $K_{16}$, on va donc devoir faire une recherche exhaustive des bits de $K_{16}$ pour chaque S-box afin de retrouver les 48 bits de la sous-clé (6 bits par S-box).\\
 	On fera donc 8 recherches de 6 bits pour une complexité de $8 * 2^{6} $.
 	
 	\section{Question 2} 
 	\subsection{Décrire précisément ce que vous faites pour retrouver la clé}
-	Pour trouver la clé on va se servir du chiffré non fauté et le comparer à chacun des 32 chiffrés fauté.\\
-	Pour ce faire on va diviser chaque chiffré en 2 blocs de 32 bits chacun.\\
-	On aura donc un chiffré non fauté (C) sous la forme suivant :\\
-	1E F4 9F 41 || 6D 5D 57 8A \\
-	On va pour chaque chiffré fauté (FC) utiliser l'opération XOR entre le premier bloc de C et celui de FC afin de retrouver 32 bits qu'on nommera E'.\\
-	On effectue la même opération entre le second bloc de C et de FC afin de trouver 32 autres bits qu'on nommera E.\\
+	On a précédemment établi 8 équations qui devrait nous permettre de retrouver $K_{16}$, chaque équation permettant de trouver 6 bits de la clé rentrant dans la S-box correspondante.
+	On va donc maintenant devoir attaquer chaque S-Box pour retrouver les 6 bits de $K_{16}$. Cependant comme vu précédemment les 4 bits de sorties d'une S-Box peuvent correspondre à plusieurs entrées de 6 bits différents. On va donc procéder de la façon suivante afin de trouver les 6 bon bits de la clé pour chaque S-Box : \\
+	\begin{itemize}
+		\item En premier lieu on va chercher pour chaque S-Box quels sont les chiffrés faux correspondants de la façon suivante:\\ 
+		\begin{center}\includegraphics[scale=0.4]{SBOX_Finder.png}\end{center}
+		\item On constate ici au résultat de $L_{16} \oplus L_{16}^{*}$ que le $1^{er}$ et le $8^{ème}$ blocs de 4 bits sont différents de 0. On en déduit donc que ce chiffré peut être utilisé pour l'attaque des S-Box 1 et 8.
+		\item Pour attaquer une S-Box on va donc utiliser le bloc de 4 bits qui lui correspond et retrouver toutes les valeurs d'entrée possible de 6 bits de la façon suivante (ici on utilise l'exemple précédent pour attaquer S1 et S8) :\\
+		\begin{center}\includegraphics[scale=0.4]{SBOXAttack.png}\end{center}
+		\item On va ensuite faire une recherche exhaustive sur les 6 bits d'entrée possible de la S-Box avec chacun des chiffrés choisi pour cette S-Box.
+		\item La solution retenue sera celle en commun pour chaque attaque sur cette S-Box.
+	\end{itemize} 
+	De cette manière on va réussir a obtenir 8 * 6 bits  = 48 bits soit $K_{16}$.
 	
 	\subsection{Donnez les 48 bits de clé que vous obtenez grâce à cette attaque par fautes}
 	
