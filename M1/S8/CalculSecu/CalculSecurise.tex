@@ -61,29 +61,29 @@
 	On a donc 48 bits , qui vont être "découpés" en 8 blocs de 6 bits. Chaque bloc va ensuite passer par une S-Box. Les S-Box prennent en entrée 6 bits et en renvoient 4, ce qui permet de ramener la nombre de bit à 32 (soit la taille initiale de $R_{i - 1}$).\\
 	Ce bloc de 32 bits va finalement subir une permutation, la sortie de cette permutation étant le resultat renvoyé par la fonction F.\\
 	On peut donc écrire l'équation $L_{16}  \oplus L_{16}^{*} = F(R_{15}, K_{16}) \oplus F(R_{15}^{*}, K_{16})$ de la façon suivante : \\
-	$$L_{16}  \oplus L_{16}^{*} = P(S(E(R_{15}, K_{16}))) \oplus P(S(E(R_{15}^{*}, K_{16})))$$
+	$$L_{16}  \oplus L_{16}^{*} = P(S(E(R_{15})\oplus K_{16})) \oplus P(S(E(R_{15}^{*})\oplus K_{16}))$$
 	
 	On sait également d'après le schéma d'exécution de la fonction F qu'on peut isoler individuellement le résultat de chaque S-box, ce qui permet de  transformer cette équation.\\
 	$L_{16}  \oplus L_{16}^{*} = F(R_{15}, K_{16}) \oplus F(R_{15}^{*}, K_{16})$  devient :\\
 	$$L_{16} \oplus L_{16}^{*} = $$\\
-	$$P(S_{1}(E(R_{15},K_{16}^{0-5})) || S_{2}(E(R_{15},K_{16}^{6-11}))||...)$$\\
+	$$P(S_{1}(E(R_{15}) \oplus K_{16}^{0-5})) || S_{2}(E(R_{15}) \oplus K_{16}^{6-11}))||...)$$\\
 	$$\oplus$$\\
-	$$P(S_{1}(E(R_{15}^{*},K_{16}^{0-5}))||S_{2}(E(R_{15}^{*},K_{16}^{6-11}))||...)$$\\
+	$$P(S_{1}(E(R_{15}^{*}) \oplus K_{16}^{0-5}))||S_{2}(E(R_{15}^{*}) \oplus K_{16}^{6-11}))||...)$$\\
 	On peut se permettre d'écrire l'équation ainsi car le contenu des différentes S-box est connu, on peut donc à partir des 6 bits d'entrée trouver les bits de sortie correspondants (par ailleurs on peut également retrouver à partir des 4 bits de sortie d'une S-box plusieurs bloc de 6 bits d'entrée possible).\\
 	
 	Maintenant on souhaite se débarrasser de P dans notre équation, pour cela il suffit d'appliquer $P^{-1}$ à 	$L_{16}  \oplus L_{16}^{*}$ soit (possible car la permutation P est connue): \\
 	$$P^{-1} (L_{16}  \oplus L_{16}^{*}) = $$\\
-	$$S_{1}(E(R_{15},K_{16}^{0-5})) \oplus S_{1}(E(R_{15}^{*},K_{16}^{0-5}))
+	$$S_{1}(E(R_{15}) \oplus K_{16}^{0-5}) \oplus S_{1}(E(R_{15}^{*}) \oplus K_{16}^{0-5})
 	 || 
-	S_{2}(E(R_{15},K_{16}^{6-11})) \oplus S_{2}(E(R_{15}^{*},K_{16}^{6-11}))||$$
+	S_{2}(E(R_{15})\oplus K_{16}^{6-11}) \oplus S_{2}(E(R_{15}^{*}) \oplus K_{16}^{6-11})||$$
 	$$...$$\\
 	
 	On peut maintenant mettre en pratique le fait que l'on puisse retrouver les bits d'entrée des 6 box grâce aux bit de sortie pour utiliser cette équation sur les S-box.\\
 	On va diviser $P^{-1} (L_{16}  \oplus L_{16}^{*})$ en 8 blocs de 4 bits. Chaque bloc correspond donc à une sortie de S-box. 
 	On aura donc 8 équations :\\
 	\begin{itemize}
-		\item $P^{-1} (L_{16}  \oplus L_{16}^{*})_{0-3} = S_{1}(E(R_{15}, K_{16}))_{0-3} \oplus S_{1}(E(R_{15}^{*}, K_{16}))_{0-3} $
-		\item $P^{-1} (L_{16}  \oplus L_{16}^{*})_{4-7} = S_{2}(E(R_{15}, K_{16}))_{4-7} \oplus S_{2}(E(R_{15}^{*}, K_{16}))_{4-7} $
+		\item $P^{-1} (L_{16}  \oplus L_{16}^{*})_{0-3} = S_{1}(E(R_{15}) \oplus K_{16}))_{0-3} \oplus S_{1}(E(R_{15}^{*}) \oplus K_{16})_{0-3} $
+		\item $P^{-1} (L_{16}  \oplus L_{16}^{*})_{4-7} = S_{2}(E(R_{15}) \oplus K_{16}))_{4-7} \oplus S_{2}(E(R_{15}^{*}) \oplus K_{16})_{4-7} $
 		\item ...
 	\end{itemize}
 	$K_{16}$ est la seule valeur inconnue dans ces 8 équations. Chacune de ces équations va nous permettre de retrouver 6 bits de $K_{16}$, on va donc devoir faire une recherche exhaustive des bits de $K_{16}$ pour chaque S-box afin de retrouver les 48 bits de la sous-clé (6 bits par S-box).\\
@@ -97,13 +97,30 @@
 		\item En premier lieu on va chercher pour chaque S-Box quels sont les chiffrés faux correspondants de la façon suivante:\\ 
 		\begin{center}\includegraphics[scale=0.4]{SBOX_Finder.png}\end{center}
 		\item On constate ici au résultat de $L_{16} \oplus L_{16}^{*}$ que le $1^{er}$ et le $8^{ème}$ blocs de 4 bits sont différents de 0. On en déduit donc que ce chiffré peut être utilisé pour l'attaque des S-Box 1 et 8.
-		\item Pour attaquer une S-Box on va donc utiliser le bloc de 4 bits qui lui correspond et retrouver toutes les valeurs d'entrée possible de 6 bits de la façon suivante (ici on utilise l'exemple précédent pour attaquer S1 et S8) :\\
-		\begin{center}\includegraphics[scale=0.4]{SBOXAttack.png}\end{center}
-		\item On va ensuite faire une recherche exhaustive sur les 6 bits d'entrée possible de la S-Box avec chacun des chiffrés choisi pour cette S-Box.
-		\item La solution retenue sera celle en commun pour chaque attaque sur cette S-Box.
+		\item La partie précédente nous à permis de définir 8 équations de cette forme :
+		$$P^{-1} (L_{16} \oplus L_{16}^{*})_{0-3} = S_{1}(E(R_{15})\oplus K_{16})_{0-3} \oplus S_{1}(E(R_{15}^{*})\oplus K_{16})_{0-3}...$$\\
+		On a vu comment identifier quels chiffrés faux utiliser contre quels S-BOX, on va à partir de la devoir trouver tout les couples de 6 bits possibles $R_{15}\oplus K_{16}$ et $R_{15}^{*}\oplus K_{16}$ tel que :
+		$$S(E(R_{15})\oplus K_{16})_{i-i+3} \oplus S(E(R_{15}^{*})\oplus K_{16})_{i-i+3} = P^{-1} (L_{16} \oplus L_{16}^{*})_{i-i+3}$$
+		On va ensuite devoir isoler $K_{16}$.\\
+		Pour ce faire on va :\\
+		\begin{itemize}
+			\item Récupérer le chiffré juste C. On notera\\ 
+			$L_{16} = IP(C)_{0-31}$  et $ R_{15} = R_{16}  = IP(C)_{32-62}$\\
+			\item On récupère un chiffré faux FC utilisable sur la s-box a attaquer. On notera \\
+			 $L_{16}^{*} = IP(FC)_{0-31}$  et $ R_{15}^{*} = R_{16}^{*} = IP(FC)_{32-62}$\\
+			\item Chacune de ces variables est connue est fait 32 bits.\\
+			On va donc prendre en référence $P^{-1}(L_{16} \oplus L_{16}^{*})$\\
+			O va également appliquer une expansion E (présente dans la fonction F vue précédemment) à $R_{15}$ et $R_{15}^{*}$ tel que $E\_R_{15} = E(R_{15})$ et $E\_R_{15}^{*} = E(R_{15}^{*})$ avec $E\_R_{15}$ et $E\_R_{15}^{*}$ de 48 bits.\\
+			\item On effectue ensuite une recherche exhaustive de $K_{16}$.\\
+			On note $Ctmp = E\_R_{15} \oplus K_{16}$ \\
+			et \ \ \ \ \ \ \ \ $FCtmp = E\_R_{15}^{*} \oplus K_{16}$, chacune de ces 2 variables composée de 48 bits.\\
+			\item Maintenant, on va récupérer 6 bits correspondant à la S-box que l'on souhaite attaquer (les 6 premiers si on souhaite attaquer $S_{1}$ et ainsi de suite).
+			\item On utilise ces 6 bits sur la S-Box à attaquer. Si le résultat de la S-Box correspond à  $P^{-1}(L_{16} \oplus L_{16}^{*})$ alors on saura que les 6 bits de $K_{16}$ utilisé pour créer Ctmp et FCtmp sont une solutions possible.
+			\item Enfin on réitère ce processus avec plusieurs chiffrés différents sur une même S-box (les chiffrés identifiés précédemment comme étant utilisable sur cette S-Box).\\
+			On aura donc plusieurs solutions de 6 bits possibles pour $K_{16}$. Les 6 bon bits a conservé seront ceux communs a chaque attaque effectuée sur la S-Box. 
+		\end{itemize}
+		\item De cette façon on a réussi a identifier 6 bits de $K_{16}$ grâce à une S-Box. Il nous suffit donc d'attaquer les 7 autres de la même manière pour réussir à obtenir 8 * 6 bits = 48 bits soit $K_{16}$.
 	\end{itemize} 
-	De cette manière on va réussir a obtenir 8 * 6 bits  = 48 bits soit $K_{16}$.
-	
 	\subsection{Donnez les 48 bits de clé que vous obtenez grâce à cette attaque par fautes}
 	
 	\section{Question 3}
