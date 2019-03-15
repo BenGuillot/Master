@@ -115,13 +115,20 @@
 			On note $Ctmp = E\_R_{15} \oplus K_{16}$ \\
 			et \ \ \ \ \ \ \ \ $FCtmp = E\_R_{15}^{*} \oplus K_{16}$, chacune de ces 2 variables composée de 48 bits.\\
 			\item Maintenant, on va récupérer 6 bits correspondant à la S-box que l'on souhaite attaquer (les 6 premiers si on souhaite attaquer $S_{1}$ et ainsi de suite).
-			\item On utilise ces 6 bits sur la S-Box à attaquer. Si le résultat de la S-Box correspond à  $P^{-1}(L_{16} \oplus L_{16}^{*})$ alors on saura que les 6 bits de $K_{16}$ utilisé pour créer Ctmp et FCtmp sont une solutions possible.
+			\item On utilise ces 6 bits sur la S-Box à attaquer avec Ctmp et FCtmp. Puis on appliquer un XOR sur le resultat obtenue avec Ctmp et FCtmp sur la S-Box.\\
+			Si le résultat du XOR correspond à  $P^{-1}(L_{16} \oplus L_{16}^{*})$ alors on saura que les 6 bits de $K_{16}$ utilisé pour créer Ctmp et FCtmp sont une solutions possible.
 			\item Enfin on réitère ce processus avec plusieurs chiffrés différents sur une même S-box (les chiffrés identifiés précédemment comme étant utilisable sur cette S-Box).\\
 			On aura donc plusieurs solutions de 6 bits possibles pour $K_{16}$. Les 6 bon bits a conservé seront ceux communs a chaque attaque effectuée sur la S-Box. 
 		\end{itemize}
 		\item De cette façon on a réussi a identifier 6 bits de $K_{16}$ grâce à une S-Box. Il nous suffit donc d'attaquer les 7 autres de la même manière pour réussir à obtenir 8 * 6 bits = 48 bits soit $K_{16}$.
 	\end{itemize} 
 	\subsection{Donnez les 48 bits de clé que vous obtenez grâce à cette attaque par fautes}
+	On à pu, grâce à l'attaque décrite précédement identifier $K_{16}$ comme étant :\\
+	\begin{itemize}
+		\item directement en sortie du programme : $$b|8|3a|21|??|d|2a$$
+		\item converti en binaire : $$001011|001000|111110|110110|100001|?|001101|101010$$
+		\item converti en hexadécimal : $$? $$
+	\end{itemize}
 	
 	\section{Question 3}
 	\subsection{Expliquer comment on peut retrouver les 8 bits manquants}

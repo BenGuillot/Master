@@ -101,9 +101,14 @@ void SubKey16finder (){
 	int CL16[32], CR16[32], FCL16[32], FCR15[32], REFERENCE[32] /* P-1(L16 XOR L16*) */;
 	int E_CR15[48], E_FCR15[48];
 	int tmpC[6], tmpFC[6]; //variables à utiliser pour les S-BOX
-	int SBOX_res[8][6][64] = {{{0}}}; //resultat des attaques sur les S-BOX
-	int nbSolviables[8][6] = {{0}};
-
+	int SBOX_res[8][6][64] = {
+								{
+									{0}
+								}
+							}; //resultat des attaques sur les S-BOX
+	int nbSolviables[8][6] = {
+								{0}
+							 };
 	//utilisé pour chaques S-BOX
 	IPpermut(C); //permutation IP(C)
 	for (int i = 0; i < 64; i ++){
@@ -112,50 +117,42 @@ void SubKey16finder (){
 		if (i > 31)
 			CR16[i-32] = C[i]; //R16 = 32 derniers bits de C
 	}
+	//printf("\t ASSIGNATION CL16 & CR16 check\n");
 	for (int i = 0; i < 8; i++){
 		printf("############  SBOX %d ##########\n", i +1);
 		for (int j = 0; j < 6; j ++){
-			/*printf("chiffré juste : \n");
-			for (int k = 0; k < 64; k++){
-				printf("%d",C[k]);
-			}
-			printf("\n");*/
 		//ASSIGNATIONS
-		{
-			//assignation du FC 
+		//assignation du FC 
 			int usedFC = SBOX_opponent[i][j]; //FC a utiliser
-			printf("FAUTE %d ", usedFC + 1);
 			int tmpFC[64];
 			for (int k = 0; k < 64; k++){
 				tmpFC[k] = FC[usedFC][k];
 			}
 			IPpermut(tmpFC);
-			/*for (int k = 0; k < 64; k++){
-				printf("%d",tmpFC[k]);
-			}
-			printf("\n");*/
-			//assignation de FC16 et FCR15
 			for (int k = 0; k < 64; k ++){
 				if (k < 32)
 					FCL16[k] = tmpFC[k]; //FCL16 = 32 premiers bits de FC
 				if (k > 31)
 					FCR15[k-32] = tmpFC[k]; //FCR15 = 32 derniers bit de C
 			}
-			//assignation de REFERENCE = P-1(CL16 XOR FCL16)
+		//assignation de REFERENCE = P-1(CL16 XOR FCL16)
 			for (int k = 0; k < 32; k ++){
 				REFERENCE[k] = (CL16[k] + FCL16[k]) % 2;
-				PINVpermut(REFERENCE);
 			}
-			//assignation E_CR15 et E_FCR15
+			PINVpermut(REFERENCE);
+		//assignation E_CR15 et E_FCR15
 			Expansion(E_CR15, CR16);
 			Expansion(E_FCR15, FCR15);
-		}
-			//recherche exhaustive de K16
+		//printf("\t ASSIGNATION E_R15 & E_FR15 check\n");
+		
+		//recherche exhaustive de K16
 			for (int k = 0; k < 64; k ++){
+		//assignation K16tmp, tmpC, tmpFC
 				for (int l = 0; l < 6; l++){
 					tmpC[l] = E_CR15[i*6+l] + K16[k][l] % 2;
 					tmpFC[l] = E_FCR15[i*6+l] + K16[k][l] % 2;
 				}
+		//printf("\t ASSIGNATION K16 & tmpC & tmpFC check\n");
 				//passage dans la S-box
 				//on résupère d'abords les bits externes de tmpC et tmpFC et leurs bits internes 
 				int extTmpC[2], extTmpFC[2], intTmpC[4], intTmpFC[4];
@@ -201,7 +198,7 @@ void SubKey16finder (){
 						columnFC += 8;
 					}
 					if (intTmpFC[1] == 1){
-					columnFC += 4;
+						columnFC += 4;
 					}
 					if (intTmpFC[2] == 1){
 						columnFC += 2;
@@ -210,7 +207,7 @@ void SubKey16finder (){
 						columnFC += 1;
 					}
 				}
-				int tmpsol = Sbox[i][columnC][rowC] ^ Sbox[i][columnFC][rowFC];
+				int tmpsol = Sbox[i][rowC][columnC] ^ Sbox[i][rowFC][columnFC];
 				int ref = 0;
 				int k16 = 0;
 				{
@@ -220,8 +217,8 @@ void SubKey16finder (){
 					if (REFERENCE[i*4 +1] == 1){
 						ref += 4;
 					}
-					if (REFERENCE[i*4 + 3] == 1){
-					ref += 2;
+					if (REFERENCE[i*4 + 2] == 1){
+						ref += 2;
 					}
 					if (REFERENCE[i*4 + 3] == 1){
 						ref += 1;
@@ -247,24 +244,42 @@ void SubKey16finder (){
 						k16 += 1;
 					}
 				}
-				printf ("ref : %d || sortie de sbox : %d \n", ref, tmpsol);
 				if (tmpsol == ref){
 					SBOX_res[i][j][nbSolviables[i][j]] = k16;
 					nbSolviables[i][j] ++;
 				}
 			}
-		printf("\n");
 		}
-		for (int f = 0; f < 6; f++) 
+		for (int j = 0; j < 6; j++) 
 		{
-			printf("Faute %d : %d solutions\t", f+1, nbSolviables[i][f]);
-			for (int j = 0; i < nbSolviables[i][f]; j++) 
-				printf("%x ", SBOX_res[i][f][j]);
+			for (int k = 0; k < nbSolviables[i][j]; k++) 
+				printf("%x ", (long)SBOX_res[i][j][k]);
 			printf("\n"); 
 		}
-	} 
-	
 
+		/*int x = 0;
+		long subsubk16 = (long) SBOX_res[i][0][x];
+		for (int j = 1; j < 6; ++j)
+		{
+			int y;
+			for (y = 0; y < nbSolviables[i][j]; ++y)
+			{
+				if (subsubk16 == SBOX_res[i][j][y])
+					break;
+				if (y == nbSolviables[i][j]){
+
+					if(x+1 >= nbSolviables[i][0]){
+						printf("\nERROR\n",i,j);
+						break;
+					}
+					j = 1;
+					x ++;
+					subsubk16 = (long) SBOX_res[i][0][x];
+				}
+			}		
+		}
+		printf("Solution S%d = %x\n",i+1,subsubk16);*/
+	} 
 	//indentifiction des chiffrés faux à utiliser contre les SBOX
 	/*int res[32];
 	for (int i = 0; i < 32; i ++){
