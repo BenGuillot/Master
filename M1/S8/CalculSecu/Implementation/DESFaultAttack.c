@@ -19,15 +19,10 @@ void IPpermut(int* x){
 void PINVpermut(int* x){
 	int tmp;
 	int res[32]; 
-	//printf("permutation du chiffré : \n");
 	for (int i = 0; i < 32; i++){
 		tmp = pinv[i];
 		res[i] = x[tmp-1];
-		/*printf("%d",res[i]);
-		if (i ==3 || i ==  7 || i == 11 || i == 15 || i == 19 || i == 23 || i == 27)
-        		printf(" ");*/
 	}
-	//printf("\n");
 	for (int i = 0; i < 32; i ++){
 		x[i] = res[i];
 	}
@@ -213,6 +208,41 @@ void SubKey16finder (){
 	} 
 }
 
+void P2invpermut(int* x){
+	int tmp;
+	int res[48]; 
+	for (int i = 0; i < 56; i++){
+		if (i == 8 || i == 17 || i == 21 || i == 24 || i == 34 || i == 37 || i == 42 || i == 53) //bits perdus
+			res[i] = -1;
+		else{
+			tmp = P2inv[i];
+			res[i] = x[tmp-1];
+		}
+		printf("%d ",res[i]);
+	}
+	printf("\n");
+	for (int i = 0; i < 48; i ++){
+		x[i] = res[i];
+	}
+}
+
+void P1invpermut(int* x){
+	printf("P1invpermut\n");
+	int tmp;
+	int res[48]; 
+	for (int i = 0; i < 64; i++){
+		tmp = P1inv[i];
+		res[i] = x[tmp-1];
+		printf("%d ",res[i]);
+	}
+	printf("\n");
+	for (int i = 0; i < 48; i ++){
+		x[i] = res[i];
+	}
+}
+void KeyFinder(){
+}
+
 int main (){
 	//indentifiction des chiffrés faux à utiliser contre les SBOX
 	/*int res[32];
@@ -220,6 +250,7 @@ int main (){
 		SBOX_FINDER(FC[i], res);
 		printf("\n");
 	}*/
-	SubKey16finder();
+	//SubKey16finder();
+	KeyFinder();
 	return(0);	
 }
