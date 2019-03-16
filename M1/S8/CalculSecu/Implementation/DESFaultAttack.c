@@ -1,7 +1,6 @@
 //Implementation fault attack against DES
 #include <stdio.h>
 #include <stdlib.h>
-#include <gmp.h>
 #include<stdint.h>
 #include"DATA.h"
 
@@ -153,7 +152,6 @@ void RefIsolation(int* x, int* y, int i){
 
 void SubKey16finder (){
 	//variables
-	{
 	int CL16[32], CR16[32], FCL16[32], FCR15[32], REFERENCE[32] /* P-1(L16 XOR L16*) */;
 	int E_CR15[48], E_FCR15[48];
 	int tmpREF[4];
@@ -167,7 +165,7 @@ void SubKey16finder (){
 								{0}
 							 }; //nombre de solutions viables par S-BOX
 	int extTmpC[2], extTmpFC[2], intTmpC[4], intTmpFC[4];
-	}
+	
 	//utilisé pour chaques S-BOX
 	L16_R16_assignation(CL16,CR16);
 	for (int i = 0; i < 8; i++){
