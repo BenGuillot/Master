@@ -125,13 +125,25 @@
 	\subsection{Donnez les 48 bits de clé que vous obtenez grâce à cette attaque par fautes}
 	On à pu, grâce à l'attaque décrite précédement identifier $K_{16}$ comme étant :\\
 	\begin{itemize}
-		\item directement en sortie du programme : $$b|8|3a|21|??|d|2a$$
-		\item converti en binaire : $$001011|001000|111110|110110|100001|?|001101|101010$$
-		\item converti en hexadécimal : $$? $$
+		\item directement en sortie du programme : $$b|8|3a|21|8^{*}|d|2a$$
+		\item converti en binaire : $$001011|001000|111110|110110|100001|001000^{*}|001101|101010$$
+		\item converti en hexadécimal : $$2C8FB684836A^{*} $$
 	\end{itemize}
+	\small * : le résultat en sortie de la S-BOX 6 à été calculé à la main suite a une erreur dans l'exécution du programme fourni en annexe.
 	
 	\section{Question 3}
 	\subsection{Expliquer comment on peut retrouver les 8 bits manquants}
+	On à retrouvé à la question précédente la sous-clé $K_{16}$. On va maintenant essayer de retrouver la clé K complète.\\
+	Pour cela on devoir analyser le schéma de dérivation des sous-clé $K_{i}$ à partir de K :
+	\begin{center}\includegraphics[scale=0.4]{Kderivation.png}\end{center}
+	Après analyse de cet algorithme, on constate qu'on peut retrouver K si on à $K_{16}$ car 
+	$$K =  P1^{-1}(P2^{-1}(K_{16}))$$.
+	En analysant les données d'entrées de P2, on constate qu'elle prend 56 bits en entrée et en renvoi 48 en sortie.\\
+	On va donc avoir un problème pour $P2^{-1}$ qui va prendre en entrée 48 bits pour en renvoyer 56 en sortie, en effet il manque 8 bits.\\
+	On va pouvoir cependant retrouver les positions de ces 8 bits en analysant la table de permutation $P2$ : 
+	\begin{center}\includegraphics[scale=0.4]{P2.png}\end{center}
+	En analysant cette table de permutation on peut retrouver les 8 bits manquant qui sont donc : 
+	$$ 9, 18, 22, 25, 35, 38, 43, 54$$
 	\subsection{Faites-le, et donner ainsi la valeur complète de la clé qui vous a été assignée.}
 	
 	\section{Question 4}
