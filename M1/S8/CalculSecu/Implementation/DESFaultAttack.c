@@ -208,39 +208,22 @@ void SubKey16finder (){
 	} 
 }
 
-void P2invpermut(int* x){
-	int tmp;
-	int res[48]; 
-	for (int i = 0; i < 56; i++){
-		if (i == 8 || i == 17 || i == 21 || i == 24 || i == 34 || i == 37 || i == 42 || i == 53) //bits perdus
-			res[i] = -1;
-		else{
-			tmp = P2inv[i];
-			res[i] = x[tmp-1];
-		}
-		printf("%d ",res[i]);
-	}
-	printf("\n");
-	for (int i = 0; i < 48; i ++){
-		x[i] = res[i];
-	}
-}
 
-void P1invpermut(int* x){
-	printf("P1invpermut\n");
-	int tmp;
-	int res[48]; 
-	for (int i = 0; i < 64; i++){
-		tmp = P1inv[i];
-		res[i] = x[tmp-1];
-		printf("%d ",res[i]);
-	}
-	printf("\n");
-	for (int i = 0; i < 48; i ++){
-		x[i] = res[i];
-	}
-}
 void KeyFinder(){
+	int  tmpK[64] = {0,1,0,1,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1,0,0,0,1,1,0,1,0,1,0,1,1,1,1,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0};
+	int LostEightPos[8] = {13, 14, 18, 19, 50, 53, 57, 59};
+	for(int i = 0; i < 256; i ++){
+		for(int j = 0; j < 8; j ++){
+			tmpK[LostEightPos[j]] = theLostEight[i][j];
+		}
+		printf("*");
+
+		for (int j = 0; j < 64; ++j)
+		{
+			printf("%d", tmpK[j]);
+		}
+		printf("\n");
+	}
 }
 
 int main (){
@@ -250,7 +233,7 @@ int main (){
 		SBOX_FINDER(FC[i], res);
 		printf("\n");
 	}*/
-	//SubKey16finder();
-	KeyFinder();
+	SubKey16finder();
+	//KeyFinder();
 	return(0);	
 }
