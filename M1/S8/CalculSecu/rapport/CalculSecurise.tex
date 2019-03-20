@@ -29,7 +29,7 @@
 	En supposant que l'attaquant est capable d'effectuer une faute sur la valeur de sortie $R_{15}$ du $15_{ème}$ tour une attaque par faute peut être décrite de la façon suivante :\\
 	
 	
-	\begin{center}\includegraphics[scale=0.4]{DES_feistel.png}\end{center}
+	\begin{center}\includegraphics[scale=0.4]{screenshots/DES_feistel.png}\end{center}
 	
 	Lors d'une utilisation normal de DES (sans attaque par faute), on obtiendrais les resultats suivant pour $L_{16}$ et $R_{16}$.\\
 	\begin{itemize}
@@ -55,7 +55,7 @@
 	\\
 	\\ \\ \\ \\ 
 	$$F$$
-	\begin{center}\includegraphics[scale=0.4]{FonctionF.png}\end{center}
+	\begin{center}\includegraphics[scale=0.4]{screenshots/FonctionF.png}\end{center}
 	On constate qie la fonction F prend le bloc $R_{i - 1}$ de 32 bits en entrée ainsi que la clé $K_{i}$. $R_{i - 1}$ passe ensuite par la fonction  E qui a pour but d'appliquer une expansion sur le bloc, le passant de 32 à 48 bits.\\
 	Après l'expansion, l'opération XOR est appliquée entre $R_{i - 1}$ et $K_{i}$.\\
 	On a donc 48 bits , qui vont être "découpés" en 8 blocs de 6 bits. Chaque bloc va ensuite passer par une S-Box. Les S-Box prennent en entrée 6 bits et en renvoient 4, ce qui permet de ramener la nombre de bit à 32 (soit la taille initiale de $R_{i - 1}$).\\
@@ -95,7 +95,7 @@
 	On va donc maintenant devoir attaquer chaque S-Box pour retrouver les 6 bits de $K_{16}$. Cependant comme vu précédemment les 4 bits de sorties d'une S-Box peuvent correspondre à plusieurs entrées de 6 bits différents. On va donc procéder de la façon suivante afin de trouver les 6 bon bits de la clé pour chaque S-Box : \\
 	\begin{itemize}
 		\item En premier lieu on va chercher pour chaque S-Box quels sont les chiffrés faux correspondants de la façon suivante:\\ 
-		\begin{center}\includegraphics[scale=0.4]{SBOX_Finder.png}\end{center}
+		\begin{center}\includegraphics[scale=0.4]{screenshots/SBOX_Finder.png}\end{center}
 		\item On constate ici au résultat de $L_{16} \oplus L_{16}^{*}$ que le $1^{er}$ et le $8^{ème}$ blocs de 4 bits sont différents de 0. On en déduit donc que ce chiffré peut être utilisé pour l'attaque des S-Box 1 et 8.
 		\item La partie précédente nous à permis de définir 8 équations de cette forme :
 		$$P^{-1} (L_{16} \oplus L_{16}^{*})_{0-3} = S_{1}(E(R_{15})\oplus K_{16})_{0-3} \oplus S_{1}(E(R_{15}^{*})\oplus K_{16})_{0-3}...$$\\
@@ -125,53 +125,75 @@
 	\subsection{Donnez les 48 bits de clé que vous obtenez grâce à cette attaque par fautes}
 	On à pu, grâce à l'attaque décrite précédement identifier $K_{16}$ comme étant :\\
 	\begin{itemize}
-		\item directement en sortie du programme : $$b|8|3a|21|8^{*}|d|2a$$
-		\item converti en binaire : $$001011|001000|111110|110110|100001|001000^{*}|001101|101010$$
-		\item converti en hexadécimal : $$2C8FB684836A^{*} $$
+		\item directement en sortie du programme : $$b|8|3a|21|8|d|2a$$
+		\item converti en binaire : $$001011|001000|111110|110110|100001|001000|001101|101010$$
+		\item converti en hexadécimal : $$2C8FB684836A$$
 	\end{itemize}
-	\small * : le résultat en sortie de la S-BOX 6 à été calculé à la main suite a une erreur dans l'exécution du programme fourni en annexe.
-	
 	\section{Question 3}
 	\subsection{Expliquer comment on peut retrouver les 8 bits manquants}
 	On à retrouvé à la question précédente la sous-clé $K_{16}$. On va maintenant essayer de retrouver la clé K complète.\\
 	Pour cela on devoir analyser le schéma de dérivation des sous-clé $K_{i}$ à partir de K :
-	\begin{center}\includegraphics[scale=0.4]{Kderivation.png}\end{center}
+	\begin{center}\includegraphics[scale=0.4]{screenshots/Kderivation.png}\end{center}
 	Après analyse de cet algorithme, on constate qu'on peut retrouver K si on à $K_{16}$ car 
 	$$K =  P1^{-1}(P2^{-1}(K_{16}))$$.
 	En analysant les données d'entrées de P2, on constate qu'elle prend 56 bits en entrée et en renvoi 48 en sortie.\\
 	On va donc avoir un problème pour $P2^{-1}$ qui va prendre en entrée 48 bits pour en renvoyer 56 en sortie, en effet il manque 8 bits.\\
 	On va pouvoir cependant retrouver les positions de ces 8 bits en analysant la table de permutation $P2$ : 
-	\begin{center}\includegraphics[scale=0.4]{P2.png}\end{center}
+	\begin{center}\includegraphics[scale=0.4]{screenshots/P2.png}\end{center}
 	En analysant cette table de permutation on peut retrouver les 8 bits manquant qui sont donc : 
 	$$ 9, 18, 22, 25, 35, 38, 43, 54$$
 	En faisant quelques recherches on trouve facilement une représentation de la permutation P2 :
-	\begin{center}\includegraphics[scale=0.4]{PC2graph.png}\end{center}
+	\begin{center}\includegraphics[scale=0.4]{screenshots/PC2graph.png}\end{center}
 	On va donc facilement pouvoir reconstituer la permutation inverse $P2^{-1}$ :
-	\begin{center}\includegraphics[scale=0.4]{P2inv.png}\end{center}
+	\begin{center}\includegraphics[scale=0.4]{screenshots/P2inv.png}\end{center}
 	Les positions identifiées précédemment sont donc mise à zéro dans cette table de permutation car ce sont celles pour lesquelles on n'a pas d'information.\\ 
 	on aura également besoin de $P1^{-1}$ que l'on retrouvera de la même façon que $P2^{-1}$ : 
-	\begin{center}\includegraphics[scale=0.4]{P1inv.png}\end{center}
+	\begin{center}\includegraphics[scale=0.4]{screenshots/P1inv.png}\end{center}
 	Une fois qu'on à récupéré ces 2 permutations, on va pouvoir construire $K = P1^{-1}(P2^{-1}(K_{16}))$. Cependant ce n'est toujours pas la bonne clé puisque 8 bits sont encore inconnu (les 8 bits mis à 0 par la permutation  $P2^{-1}$). \\
 	On va donc devoir faire une recherche exhaustive sur ces 8 bits (soit 256 possibilités). On va simplement prendre K et tester ces possibilités pour les 8 bits manquants.\\
 	Après cette recherche on aura donc une clé K de 56 bits. Les 8 bits restants étant des bits de parités,il n'est pas important de les retrouver avant de chercher les 8 bits précédents.\\
 	On va pouvoir retrouver ces 8 bits en découpant K en 8 bloc de 7 bits. Pour chaque bloc on va rajouter un bit de parité, de façon à ce que chaque bloc de 8 bits ai un nombre impair de 1.
 	
 	\subsection{Faites-le, et donner ainsi la valeur complète de la clé qui vous a été assignée.}
+	Pour retrouver K, on travaille donc avec $P1^{-1}(P2^{-1}(K_{16}))$.\\
 	\begin{itemize}
-		\item K (48 bits, après les permutations) : $$ 50f808d4e0641882 $$
-		\item K (56 bits, après la recherche exhaustive de 8 bits) :
-		$$ 50f818d4e0643cc2 $$
-		\item K (64 bits, après l'ajout des bits de parité) : 
-		$$ 51f819d5e0643dc2 $$
+		\item $K_{16} = 001011|001000|111110|110110|100001|001000|001101|101010$
+		\item On retrouve facilement $P2^{-1}(K_{16})$ :\\
+		$100110100^{*}011101100^{*}1100^{*}100^{*}1001000000^{*}000^{*}10100^{*}00100011010^{*}11$\\
+		\small * : bits perdus en passant par la table de permutations, ce sont les bits qu'on va devoir retrouver pour reconstituer K.
+		\item On retrouve également  $P1^{-1}(P2^{-1}(K_{16}$ tout en prenant soin de noter ou sont permutés les bits marqués * :\\
+		$01010000^{°}111110^{*}0^{*}0^{°}000^{*}0^{*}1000^{°}11010100^{°}11100000^{°}01100100^{°}000^{*}110^{*}00^{°}10^{*}00^{*}0010^{°}$\\
+		\small * : bits perdus a retrouver\\
+		\small $^{°}$ : bits de parités\\
+		\item On remarque que certains bits de parités ne seront pas affectés par les changements sur les bits *, on peut donc déjà écrire : 
+		$$K_{provisoire} = 01010001^{°}111110^{*}0^{*}0^{°}000^{*}0^{*}1000^{°}11010101^{°}11100000^{°}01100100^{°}000^{*}110^{*}00^{°}10^{*}00^{*}0010^{°}$$
 	\end{itemize}
-	On vérifie notre résultat en chiffrant le message clair avec cette clé. Si on retrouve le même chiffré juste que celui fourni dans l'énoncé, alors on aura retrouvé K : 
+	On a ci-dessus toutes les donnes que l'on va devoir utiliser pour retrouver la clé K utilisé pour ce chiffrement. On teste donc toutes les possibilités (soit $2^{8}$).
+	On vérifie* ensuite chaque résultat en chiffrant le message clair avec la clé. trouvée. Si on retrouve le même chiffré juste que celui fourni dans l'énoncé, alors on aura retrouvé K :\\
+	$$01010001 11111000 00011000 11010101 11100000 01100100 00111100 11000010$$ 
+	soit $51F818D5E0643CC2$\\
+	\small * : vérification des clés avec le lien fourni dans l'énoncé.\\
+	
+	Cependant il manque encore les bits de parité à modifier(ces bits n'intervenant pas dans le calcul du chiffrement, on peu verifier la clé K sans les avoir modifier au préalable). On obtient donc K :
+	$$01010001 11111000 00011001 11010101 11100000 01100100 00111101 11000010$$
+	soit K = 
+	$$51F819D5E0643DC2$$
 	\begin{itemize}
 		\item Message clair : $F7 B9 B6 23 FB F7 1F 68$
 		\item Chiffré juste : $1E F4 9F 41 6D D5 57 8A $ 
 	\end{itemize}
-	\begin{center}\includegraphics[scale=0.4]{VerifK.png}\end{center} 
+	\begin{center}\includegraphics[scale=0.4]{screenshots/VerifK.png}\end{center} 
 	\section{Question 4}
-	
+	Pour retrouver la clé K grâce à l'injection d'une faute sur la sortie $R_{15}$ du $15^{ème}$ tour il à fallu :
+	\begin{itemize}
+		\item  retrouver $K_{16}$ :  $8 * 2^{6} = 2^{3} * 2^{6} = 2^{9}$ (complexité de la recherche exhaustive sur les 8 S-BOX).
+		\item retrouver K : $2^{8}$.
+	\end{itemize}
+	On a donc une complexité $2^{9} + 2^{8}$ que l'on peut approximer comme $O(2^{10})$.
+	Mais que ce passerait-il si la faute était injectée avant le $15^{ème}$ tour ?
+	\begin{center}\includegraphics[scale=0.4]{screenshots/DFA_mid_round.png}\end{center}
+	Voici un aperçu du cheminement d'une faute si l'attaque avait été réalisé sur la sortie $R_{14}$ du $14^{ème}$ tour (en rouge) ou encore celle $R_{13}$ du $13^{ème}$ tour (en bleu).\\
+	On a également en vert l'attaque que nous avons réalisé.
 	\section{Question 5}
 
 \end{document}
