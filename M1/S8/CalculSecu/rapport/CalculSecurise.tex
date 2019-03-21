@@ -45,7 +45,7 @@
 	\end{itemize}
 	
 	On a donc une possibilité de retrouver $K_{16}$ en utilisant $L_{16}$  et $L_{16}^{*}$.\\
-	On va donc utiliser l'operation XOR ($\oplus$) sur $L_{16}$  et $L_{16}^{*}$ de façon a obtenir :\\
+	On va donc utiliser l'opération XOR ($\oplus$) sur $L_{16}$  et $L_{16}^{*}$ de façon a obtenir :\\
 	$$L_{16}  \oplus L_{16}^{*} =  L_{15} \oplus F(R_{15}, K_{16}) \oplus  L_{15} \oplus F(R_{15}^{*}, K_{16}) $$\\
 	                          $$= \xout{L_{15} } \oplus F(R_{15}, K_{16}) \oplus  \xout{L_{15} } \oplus F(R_{15}^{*}, K_{16})$$\\
 	On se retrouve donc avec :\\
@@ -195,15 +195,15 @@
 	On va s'intéresser à une attaque $R_{14}$ le $14^{ème}$ tour.\\
 	On aura donc les équations suivantes :
 	\begin{itemize}
-		\item $L_{15} = R_{14}^{*} = R_{14} \oplus e$
-		\item $R_{15} = L_{14}\oplus F( R_{14}^{*}\oplus K_{15}) = R_{15} \oplus e'$
-		\item $L_{16} = L_{15}^{*}\oplus F( R_{15}^{*}\oplus K_{16})$\\
+		\item $L_{15}^{*} = R_{14}^{*} = R_{14} \oplus e$
+		\item $R_{15}^{*} = L_{14}\oplus F( R_{14}^{*}\oplus K_{15}) = R_{15} \oplus e'$
+		\item $L_{16}^{*} = L_{15}^{*}\oplus F( R_{15}^{*}\oplus K_{16})$\\
 		$= (R_{14} \oplus e)\oplus  F( R_{15}^{*}\oplus K_{16})$
 	\end{itemize}
-	Essayons la même équation que pour l'attaque sur le $15^{ème}$ tour :\\
+	Essayons de retrouver la même équation que pour l'attaque sur le $15^{ème}$ tour :\\
 	$L_{16} \oplus L_{16}^{*} \oplus e = $\\ 
-	$L_{15}\oplus  F( R_{15}\oplus K_{16})\oplus L_{15}^{*} \oplus F( R_{15}^{*}\oplus K_{16}) =$\\
-	$R_{14}\oplus  F( R_{15}\oplus K_{16})\oplus  R_{14} \oplus e \oplus F( R_{15}^{*}\oplus K_{16})$\\
+	$L_{15}\oplus  F( R_{15}\oplus K_{16})\oplus L_{15}^{*} \oplus F( R_{15}^{*}\oplus K_{16})$\\
+	$= R_{14}\oplus  F( R_{15}\oplus K_{16})\oplus  R_{14} \oplus e \oplus F( R_{15}^{*}\oplus K_{16})$\\
 	On peut retrouver e de la façon suivante :\\
 	$e = R_{14}\oplus R_{14}^{*} = L_{15}\oplus  L_{15}^{*}$
 	Avec cette valeur on peut donc obtenir l'équation suivante :\\
@@ -213,7 +213,30 @@
 	\subsection{attaque sur $R_{13}$ du $13^{ème}$ tour}
 		On va s'intéresser à une attaque $R_{13}$ le $13^{ème}$ tour.\\
 	On aura donc les équations suivantes :
+	\begin{itemize}
+		\item $L_{14}^{*} = R_{13}^{*} = R_{13} \oplus e$
+		\item $R_{14}^{*} = L_{13}\oplus F( R_{13}^{*}\oplus K_{14}) = R_{14} \oplus e'$
+		\item $L_{15}^{*} =R_{14}^{*}$
+		\item $R_{15}^{*} = L_{14}^{*}\oplus F( R_{14}^{*}\oplus K_{15})$
+		\item $L_{16}^{*} = L_{15}^{*}\oplus F( R_{15}^{*}\oplus K_{16})$
+	\end{itemize}
+	Essayons de retrouver la même équation que pour l'attaque sur le $15^{ème}$ tour :\\
+	$L_{16} \oplus L_{16}^{*} \oplus e' = $\\ 
+	$L_{15}\oplus  F( R_{15}\oplus K_{16})\oplus L_{15}^{*} \oplus F( R_{15}^{*}\oplus K_{16})$\\
+	$= R_{14}\oplus  F( R_{15}\oplus K_{16})\oplus  R_{14} \oplus e' \oplus F( R_{15}^{*}\oplus K_{16})$\\
+	On peut retrouver e' de la façon suivante :\\
+	$e' = R_{13}\oplus R_{13}^{*} = L_{14}\oplus  L_{14}^{*}$
+	Avec cette valeur on peut donc obtenir l'équation suivante :\\
+	$L_{16} \oplus L_{16}^{*} \oplus e' = $\\ 
+	$\xout{R_{14}}\oplus  F( R_{15}\oplus K_{16})\oplus  \xout{R_{14}} \oplus \xout{e'} \oplus F( R_{15}^{*}\oplus K_{16})\oplus \xout{e}$\\
+	On retrouve ici la même équation que pour une attaque sur le dernier tour de DES. On peut donc l'exploiter de la même façon pour retrouver la clé K. Il faut cependant réussir a identifier $L_{14}$ et $L_{14}^{*}$. La différence de complexités est donc celle de la recherche de ces 2 inconnus.\\
+	\subsection{au delà}
+	On constate que plus on remonte dans les tours, plus les valeurs dont on aura besoin pour retrouver K seront compliquées à obtenir. De ce fait cette attaque ne sera pas réaliste sur tout les tour de DES.
 	\section{Question 5}
+		\subsection{contre-mesure par répétition}
+		redondance temporelle
+		\subsection{contre-mesure matérielle}
+		\subsection{autre}
 	\section{Annexe}
 		\subsection{SBoxFinder}
 			\begin{center}\includegraphics[scale=0.4]{screenshots/code/SBOX_FINDER1.png}\end{center} 
