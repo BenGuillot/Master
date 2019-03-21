@@ -24,7 +24,7 @@
 	
 	\section{Question 1}
 	Une attaque par faute contre le DES consiste à introduire une modification sur un bit du chiffré durant l'exécution du chiffrement de manière a compromettre son execution.De ce fait si on dispose d'un chiffré correct et d'un chiffré fauté par l'attaque on peut obtenir des informations sur une partie de  la clé utilisée pour le chiffrement.
-	Lors d'une attaque par force brute (recherche exhaustive) sur la clé du DES, la complexité est de $2^{56}$. l'objectif de l'attaque par faute est de réduire cette complexitée.\\
+	Lors d'une attaque par force brute (recherche exhaustive) sur la clé du DES, la complexité est de $2^{56}$. Le but d'une telle attaque est donc de réduire cette complexité.\\
 
 	En supposant que l'attaquant est capable d'effectuer une faute sur la valeur de sortie $R_{15}$ du $15_{ème}$ tour une attaque par faute peut être décrite de la façon suivante :\\
 	
@@ -56,7 +56,7 @@
 	\\ \\ \\ \\ 
 	$$F$$
 	\begin{center}\includegraphics[scale=0.4]{screenshots/FonctionF.png}\end{center}
-	On constate qie la fonction F prend le bloc $R_{i - 1}$ de 32 bits en entrée ainsi que la clé $K_{i}$. $R_{i - 1}$ passe ensuite par la fonction  E qui a pour but d'appliquer une expansion sur le bloc, le passant de 32 à 48 bits.\\
+	On constate que la fonction F prend le bloc $R_{i - 1}$ de 32 bits en entrée ainsi que la clé $K_{i}$. $R_{i - 1}$ passe ensuite par la fonction  E qui a pour but d'appliquer une expansion sur le bloc, le passant ainsi de 32 à 48 bits.\\
 	Après l'expansion, l'opération XOR est appliquée entre $R_{i - 1}$ et $K_{i}$.\\
 	On a donc 48 bits , qui vont être "découpés" en 8 blocs de 6 bits. Chaque bloc va ensuite passer par une S-Box. Les S-Box prennent en entrée 6 bits et en renvoient 4, ce qui permet de ramener la nombre de bit à 32 (soit la taille initiale de $R_{i - 1}$).\\
 	Ce bloc de 32 bits va finalement subir une permutation, la sortie de cette permutation étant le resultat renvoyé par la fonction F.\\
@@ -65,10 +65,10 @@
 	
 	On sait également d'après le schéma d'exécution de la fonction F qu'on peut isoler individuellement le résultat de chaque S-box, ce qui permet de  transformer cette équation.\\
 	$L_{16}  \oplus L_{16}^{*} = F(R_{15}, K_{16}) \oplus F(R_{15}^{*}, K_{16})$  devient :\\
-	$$L_{16} \oplus L_{16}^{*} = $$\\
-	$$P(S_{1}(E(R_{15}) \oplus K_{16}^{0-5})) || S_{2}(E(R_{15}) \oplus K_{16}^{6-11}))||...)$$\\
-	$$\oplus$$\\
-	$$P(S_{1}(E(R_{15}^{*}) \oplus K_{16}^{0-5}))||S_{2}(E(R_{15}^{*}) \oplus K_{16}^{6-11}))||...)$$\\
+	$L_{16} \oplus L_{16}^{*} = $
+	$P(S_{1}(E(R_{15}) \oplus K_{16}^{0-5})) || S_{2}(E(R_{15}) \oplus K_{16}^{6-11}))||...)$\\
+	$$\oplus$$
+	\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ $P(S_{1}(E(R_{15}^{*}) \oplus K_{16}^{0-5}))||S_{2}(E(R_{15}^{*}) \oplus K_{16}^{6-11}))||...)$\\
 	On peut se permettre d'écrire l'équation ainsi car le contenu des différentes S-box est connu, on peut donc à partir des 6 bits d'entrée trouver les bits de sortie correspondants (par ailleurs on peut également retrouver à partir des 4 bits de sortie d'une S-box plusieurs bloc de 6 bits d'entrée possible).\\
 	
 	Maintenant on souhaite se débarrasser de P dans notre équation, pour cela il suffit d'appliquer $P^{-1}$ à 	$L_{16}  \oplus L_{16}^{*}$ soit (possible car la permutation P est connue): \\
@@ -86,17 +86,17 @@
 		\item $P^{-1} (L_{16}  \oplus L_{16}^{*})_{4-7} = S_{2}(E(R_{15}) \oplus K_{16}))_{4-7} \oplus S_{2}(E(R_{15}^{*}) \oplus K_{16})_{4-7} $
 		\item ...
 	\end{itemize}
-	$K_{16}$ est la seule valeur inconnue dans ces 8 équations. Chacune de ces équations va nous permettre de retrouver 6 bits de $K_{16}$, on va donc devoir faire une recherche exhaustive des bits de $K_{16}$ pour chaque S-box afin de retrouver les 48 bits de la sous-clé (6 bits par S-box).\\
-	On fera donc 8 recherches de 6 bits pour une complexité de $8 * 2^{6} $.
+	$K_{16}$ est la seule valeur inconnue dans ces 8 équations. Chacune de ces équations va nous permettre de retrouver 6 bits de $K_{16}$, on va donc devoir faire une recherche exhaustive des bits de $K_{16}$ pour chaque S-box afin de retrouver les 48 bits de la sous-clé (6 bits par S-box). Pour cela on va tester toutes les valeurs possibles de $K_{16}$ pour chaque équations.\\
+	On fera donc 8 recherches de 6 bits pour une complexité de $6 * 8 * 2^{6} = 6 * 2^{3} * 2^{6} = 3 * 2^{1} * 2^{9} = 3 * 2^{10} $.
 	
 	\section{Question 2} 
 	\subsection{Décrire précisément ce que vous faites pour retrouver la clé}
 	On a précédemment établi 8 équations qui devrait nous permettre de retrouver $K_{16}$, chaque équation permettant de trouver 6 bits de la clé rentrant dans la S-box correspondante.
-	On va donc maintenant devoir attaquer chaque S-Box pour retrouver les 6 bits de $K_{16}$. Cependant comme vu précédemment les 4 bits de sorties d'une S-Box peuvent correspondre à plusieurs entrées de 6 bits différents. On va donc procéder de la façon suivante afin de trouver les 6 bon bits de la clé pour chaque S-Box : \\
+	On va donc maintenant devoir attaquer chaque S-Box pour retrouver les 6 bits de $K_{16}$. Cependant comme vu précédemment les 4 bits de sorties d'une S-Box peuvent correspondre à plusieurs entrées de 6 bits différents. On ne peut donc pas se contenter d'une seule recherche exhaustive. On va donc procéder de la façon suivante afin de trouver les 6 bon bits de la clé pour chaque S-Box : \\
 	\begin{itemize}
 		\item En premier lieu on va chercher pour chaque S-Box quels sont les chiffrés faux correspondants de la façon suivante:\\ 
 		\begin{center}\includegraphics[scale=0.4]{screenshots/SBOX_Finder.png}\end{center}
-		\item On constate ici au résultat de $L_{16} \oplus L_{16}^{*}$ que le $1^{er}$ et le $8^{ème}$ blocs de 4 bits sont différents de 0. On en déduit donc que ce chiffré peut être utilisé pour l'attaque des S-Box 1 et 8.
+		\item On constate ici au résultat de $P^{-1}(L_{16} \oplus L_{16}^{*})$ que le $1^{er}$ et le $8^{ème}$ blocs de 4 bits sont différents de 0. On en déduit donc que ce chiffré peut être utilisé pour l'attaque des S-Box 1 et 8.
 		\item La partie précédente nous à permis de définir 8 équations de cette forme :
 		$$P^{-1} (L_{16} \oplus L_{16}^{*})_{0-3} = S_{1}(E(R_{15})\oplus K_{16})_{0-3} \oplus S_{1}(E(R_{15}^{*})\oplus K_{16})_{0-3}...$$\\
 		On a vu comment identifier quels chiffrés faux utiliser contre quels S-BOX, on va à partir de la devoir trouver tout les couples de 6 bits possibles $R_{15}\oplus K_{16}$ et $R_{15}^{*}\oplus K_{16}$ tel que :
@@ -108,14 +108,13 @@
 			$L_{16} = IP(C)_{0-31}$  et $ R_{15} = R_{16}  = IP(C)_{32-62}$\\
 			\item On récupère un chiffré faux FC utilisable sur la s-box a attaquer. On notera \\
 			 $L_{16}^{*} = IP(FC)_{0-31}$  et $ R_{15}^{*} = R_{16}^{*} = IP(FC)_{32-62}$\\
-			\item Chacune de ces variables est connue est fait 32 bits.\\
+			\item Chacune de ces variables est connue et fait 32 bits.\\
 			On va donc prendre en référence $P^{-1}(L_{16} \oplus L_{16}^{*})$\\
-			O va également appliquer une expansion E (présente dans la fonction F vue précédemment) à $R_{15}$ et $R_{15}^{*}$ tel que $E\_R_{15} = E(R_{15})$ et $E\_R_{15}^{*} = E(R_{15}^{*})$ avec $E\_R_{15}$ et $E\_R_{15}^{*}$ de 48 bits.\\
-			\item On effectue ensuite une recherche exhaustive de $K_{16}$.\\
+			On va également appliquer une expansion E (présente dans la fonction F vue précédemment) à $R_{15}$ et $R_{15}^{*}$ tel que $E\_R_{15} = E(R_{15})$ et $E\_R_{15}^{*} = E(R_{15}^{*})$ avec $E\_R_{15}$ et $E\_R_{15}^{*}$ de 48 bits.\\
+			\item On effectue ensuite une recherche exhaustive de $K_{16}$ sur 6 bits.\\
 			On note $Ctmp = E\_R_{15} \oplus K_{16}$ \\
-			et \ \ \ \ \ \ \ \ $FCtmp = E\_R_{15}^{*} \oplus K_{16}$, chacune de ces 2 variables composée de 48 bits.\\
-			\item Maintenant, on va récupérer 6 bits correspondant à la S-box que l'on souhaite attaquer (les 6 premiers si on souhaite attaquer $S_{1}$ et ainsi de suite).
-			\item On utilise ces 6 bits sur la S-Box à attaquer avec Ctmp et FCtmp. Puis on appliquer un XOR sur le resultat obtenue avec Ctmp et FCtmp sur la S-Box.\\
+			et \ \ \ \ \ \ \ \ $FCtmp = E\_R_{15}^{*} \oplus K_{16}$,\\ chacune de ces 2 variables composée de 6 bits. En effet pour réduire la complexité de la recherche exhaustive de $ K_{16}$ on va selectionner uniquement les 6 bits de $E\_R_{15}$ et  $E\_R_{15}^{*}$ qui nous intéressent sur la S-Box a attaquer (les 6 premiers si on souhaite attaquer $S_{1}$ et ainsi de suite).\\
+			\item On utilise ces 6 bits sur la S-Box à attaquer avec Ctmp et FCtmp. Puis on appliquer un XOR sur le résultat obtenue avec Ctmp et FCtmp ($S(E(R_{15})\oplus K_{16})_{i-i+3} \oplus S(E(R_{15}^{*})\oplus K_{16})_{i-i+3}$) sur la S-Box.\\
 			Si le résultat du XOR correspond à  $P^{-1}(L_{16} \oplus L_{16}^{*})$ alors on saura que les 6 bits de $K_{16}$ utilisé pour créer Ctmp et FCtmp sont une solutions possible.
 			\item Enfin on réitère ce processus avec plusieurs chiffrés différents sur une même S-box (les chiffrés identifiés précédemment comme étant utilisable sur cette S-Box).\\
 			On aura donc plusieurs solutions de 6 bits possibles pour $K_{16}$. Les 6 bon bits a conservé seront ceux communs a chaque attaque effectuée sur la S-Box. 
@@ -135,24 +134,22 @@
 	Pour cela on devoir analyser le schéma de dérivation des sous-clé $K_{i}$ à partir de K :
 	\begin{center}\includegraphics[scale=0.4]{screenshots/Kderivation.png}\end{center}
 	Après analyse de cet algorithme, on constate qu'on peut retrouver K si on à $K_{16}$ car 
-	$$K =  P1^{-1}(P2^{-1}(K_{16}))$$.
+	$$K =  P1^{-1}(P2^{-1}(K_{16}))$$
 	En analysant les données d'entrées de P2, on constate qu'elle prend 56 bits en entrée et en renvoi 48 en sortie.\\
 	On va donc avoir un problème pour $P2^{-1}$ qui va prendre en entrée 48 bits pour en renvoyer 56 en sortie, en effet il manque 8 bits.\\
 	On va pouvoir cependant retrouver les positions de ces 8 bits en analysant la table de permutation $P2$ : 
 	\begin{center}\includegraphics[scale=0.4]{screenshots/P2.png}\end{center}
 	En analysant cette table de permutation on peut retrouver les 8 bits manquant qui sont donc : 
 	$$ 9, 18, 22, 25, 35, 38, 43, 54$$
-	En faisant quelques recherches on trouve facilement une représentation de la permutation P2 :
-	\begin{center}\includegraphics[scale=0.4]{screenshots/PC2graph.png}\end{center}
-	On va donc facilement pouvoir reconstituer la permutation inverse $P2^{-1}$ :
+	On va facilement pouvoir reconstituer la permutation inverse $P2^{-1}$ à partir P2 :
 	\begin{center}\includegraphics[scale=0.4]{screenshots/P2inv.png}\end{center}
 	Les positions identifiées précédemment sont donc mise à zéro dans cette table de permutation car ce sont celles pour lesquelles on n'a pas d'information.\\ 
-	on aura également besoin de $P1^{-1}$ que l'on retrouvera de la même façon que $P2^{-1}$ : 
+	on aura également besoin de $P1^{-1}$ que l'on retrouvera de la même façon que $P2^{-1}$ (à partir de P1 qui est elle aussi connu): 
 	\begin{center}\includegraphics[scale=0.4]{screenshots/P1inv.png}\end{center}
 	Une fois qu'on à récupéré ces 2 permutations, on va pouvoir construire $K = P1^{-1}(P2^{-1}(K_{16}))$. Cependant ce n'est toujours pas la bonne clé puisque 8 bits sont encore inconnu (les 8 bits mis à 0 par la permutation  $P2^{-1}$). \\
 	On va donc devoir faire une recherche exhaustive sur ces 8 bits (soit 256 possibilités). On va simplement prendre K et tester ces possibilités pour les 8 bits manquants.\\
 	Après cette recherche on aura donc une clé K de 56 bits. Les 8 bits restants étant des bits de parités,il n'est pas important de les retrouver avant de chercher les 8 bits précédents.\\
-	On va pouvoir retrouver ces 8 bits en découpant K en 8 bloc de 7 bits. Pour chaque bloc on va rajouter un bit de parité, de façon à ce que chaque bloc de 8 bits ai un nombre impair de 1.
+	On pourra les retrouver en découpant K en 8 bloc de 7 bits. Pour chaque bloc on va rajouter un bit de parité, de façon à ce que chaque bloc de 8 bits ai un nombre impair de 1.
 	
 	\subsection{Faites-le, et donner ainsi la valeur complète de la clé qui vous a été assignée.}
 	Pour retrouver K, on travaille donc avec $P1^{-1}(P2^{-1}(K_{16}))$.\\
@@ -161,7 +158,7 @@
 		\item On retrouve facilement $P2^{-1}(K_{16})$ :\\
 		$100110100^{*}011101100^{*}1100^{*}100^{*}1001000000^{*}000^{*}10100^{*}00100011010^{*}11$\\
 		\small * : bits perdus en passant par la table de permutations, ce sont les bits qu'on va devoir retrouver pour reconstituer K.
-		\item On retrouve également  $P1^{-1}(P2^{-1}(K_{16}$ tout en prenant soin de noter ou sont permutés les bits marqués * :\\
+		\item On retrouve également  $P1^{-1}(P2^{-1}(K_{16})$ tout en prenant soin de noter ou sont permutés les bits marqués * :\\
 		$01010000^{°}111110^{*}0^{*}0^{°}000^{*}0^{*}1000^{°}11010100^{°}11100000^{°}01100100^{°}000^{*}110^{*}00^{°}10^{*}00^{*}0010^{°}$\\
 		\small * : bits perdus a retrouver\\
 		\small $^{°}$ : bits de parités\\
@@ -186,14 +183,36 @@
 	\section{Question 4}
 	Pour retrouver la clé K grâce à l'injection d'une faute sur la sortie $R_{15}$ du $15^{ème}$ tour il à fallu :
 	\begin{itemize}
-		\item  retrouver $K_{16}$ :  $8 * 2^{6} = 2^{3} * 2^{6} = 2^{9}$ (complexité de la recherche exhaustive sur les 8 S-BOX).
+		\item  retrouver $K_{16}$ :  $6 * 8 * 2^{6} = 6 * 2^{3} * 2^{6} = 3 * 2^{1} * 2^{9} = 3 * 2^{10} $ (complexité de la recherche exhaustive sur les 8 S-BOX).
 		\item retrouver K : $2^{8}$.
 	\end{itemize}
-	On a donc une complexité $2^{9} + 2^{8}$ que l'on peut approximer comme $O(2^{10})$.
+	On a donc une complexité $3 * 2^{10} + 2^{8}$ que l'on peut approximer comme $O(2^{10})$.
 	Mais que ce passerait-il si la faute était injectée avant le $15^{ème}$ tour ?
 	\begin{center}\includegraphics[scale=0.4]{screenshots/DFA_mid_round.png}\end{center}
 	Voici un aperçu du cheminement d'une faute si l'attaque avait été réalisé sur la sortie $R_{14}$ du $14^{ème}$ tour (en rouge) ou encore celle $R_{13}$ du $13^{ème}$ tour (en bleu).\\
-	On a également en vert l'attaque que nous avons réalisé.
+	On a également en vert l'attaque que nous avons réalisé.\\
+	\subsection{attaque sur $R_{14}$ du $14^{ème}$ tour}
+	On va s'intéresser à une attaque $R_{14}$ le $14^{ème}$ tour.\\
+	On aura donc les équations suivantes :
+	\begin{itemize}
+		\item $L_{15} = R_{14}^{*} = R_{14} \oplus e$
+		\item $R_{15} = L_{14}\oplus F( R_{14}^{*}\oplus K_{15}) = R_{15} \oplus e'$
+		\item $L_{16} = L_{15}^{*}\oplus F( R_{15}^{*}\oplus K_{16})$\\
+		$= (R_{14} \oplus e)\oplus  F( R_{15}^{*}\oplus K_{16})$
+	\end{itemize}
+	Essayons la même équation que pour l'attaque sur le $15^{ème}$ tour :\\
+	$L_{16} \oplus L_{16}^{*} \oplus e = $\\ 
+	$L_{15}\oplus  F( R_{15}\oplus K_{16})\oplus L_{15}^{*} \oplus F( R_{15}^{*}\oplus K_{16}) =$\\
+	$R_{14}\oplus  F( R_{15}\oplus K_{16})\oplus  R_{14} \oplus e \oplus F( R_{15}^{*}\oplus K_{16})$\\
+	On peut retrouver e de la façon suivante :\\
+	$e = R_{14}\oplus R_{14}^{*} = L_{15}\oplus  L_{15}^{*}$
+	Avec cette valeur on peut donc obtenir l'équation suivante :\\
+	$L_{16} \oplus L_{16}^{*} \oplus e = $\\ 
+	$\xout{R_{14}}\oplus  F( R_{15}\oplus K_{16})\oplus  \xout{R_{14}} \oplus \xout{e} \oplus F( R_{15}^{*}\oplus K_{16})\oplus \xout{e}$\\
+	On retrouve ici la même équation que pour une attaque sur le dernier tour de DES. On peut donc l'exploiter de la même façon pour retrouver la clé K. Il faut cependant réussir a identifier $L_{15}$ et $L_{15}^{*}$. La différence de complexités est donc celle de la recherche de ces 2 inconnus.\\
+	\subsection{attaque sur $R_{13}$ du $13^{ème}$ tour}
+		On va s'intéresser à une attaque $R_{13}$ le $13^{ème}$ tour.\\
+	On aura donc les équations suivantes :
 	\section{Question 5}
 	\section{Annexe}
 		\subsection{SBoxFinder}
