@@ -201,7 +201,7 @@
 		$= (R_{14} \oplus e)\oplus  F( R_{15}^{*}\oplus K_{16})$
 	\end{itemize}
 	Essayons de retrouver la même équation que pour l'attaque sur le $15^{ème}$ tour :\\
-	$L_{16} \oplus L_{16}^{*} \oplus e = $\\ 
+	$L_{16} \oplus L_{16}^{*} = $\\ 
 	$L_{15}\oplus  F( R_{15}\oplus K_{16})\oplus L_{15}^{*} \oplus F( R_{15}^{*}\oplus K_{16})$\\
 	$= R_{14}\oplus  F( R_{15}\oplus K_{16})\oplus  R_{14} \oplus e \oplus F( R_{15}^{*}\oplus K_{16})$\\
 	On peut retrouver e de la façon suivante :\\
@@ -210,6 +210,9 @@
 	$L_{16} \oplus L_{16}^{*} \oplus e = $\\ 
 	$\xout{R_{14}}\oplus  F( R_{15}\oplus K_{16})\oplus  \xout{R_{14}} \oplus \xout{e} \oplus F( R_{15}^{*}\oplus K_{16})\oplus \xout{e}$\\
 	On retrouve ici la même équation que pour une attaque sur le dernier tour de DES. On peut donc l'exploiter de la même façon pour retrouver la clé K. Il faut cependant réussir a identifier $L_{15}$ et $L_{15}^{*}$. La différence de complexités est donc celle de la recherche de ces 2 inconnus.\\
+	On peut calculer $L_{15}$ de la façon suivante :\\
+	$L_{15} = L_{16} \oplus F( R_{15}\oplus K_{16}) = L_{15} \oplus  F( R_{15}\oplus K_{16})  \oplus  F( R_{15}\oplus K_{16})$
+	On a donc $2^{9}$ possibilités pour $K_{16}$, et $2^{5}$ possibilités pour $L_{15}^{*}$ ce qui nous fait $2^{14}$. Il faut ensuite refaire le même type de recherche exhaustive que celle décrite dans la question 2 pour chaque couple $(L_{15}, L_{15}^{*})$ possible, ce qui amène la complexité à : $3*2^{10}*2^{14} = 2^{24}$
 	\subsection{attaque sur $R_{13}$ du $13^{ème}$ tour}
 		On va s'intéresser à une attaque $R_{13}$ le $13^{ème}$ tour.\\
 	On aura donc les équations suivantes :
@@ -221,22 +224,30 @@
 		\item $L_{16}^{*} = L_{15}^{*}\oplus F( R_{15}^{*}\oplus K_{16})$
 	\end{itemize}
 	Essayons de retrouver la même équation que pour l'attaque sur le $15^{ème}$ tour :\\
-	$L_{16} \oplus L_{16}^{*} \oplus e' = $\\ 
+	$L_{16} \oplus L_{16}^{*} = $\\ 
 	$L_{15}\oplus  F( R_{15}\oplus K_{16})\oplus L_{15}^{*} \oplus F( R_{15}^{*}\oplus K_{16})$\\
 	$= R_{14}\oplus  F( R_{15}\oplus K_{16})\oplus  R_{14} \oplus e' \oplus F( R_{15}^{*}\oplus K_{16})$\\
 	On peut retrouver e' de la façon suivante :\\
-	$e' = R_{13}\oplus R_{13}^{*} = L_{14}\oplus  L_{14}^{*}$
+	$e' = R_{14}\oplus R_{14}^{*} $
 	Avec cette valeur on peut donc obtenir l'équation suivante :\\
 	$L_{16} \oplus L_{16}^{*} \oplus e' = $\\ 
-	$\xout{R_{14}}\oplus  F( R_{15}\oplus K_{16})\oplus  \xout{R_{14}} \oplus \xout{e'} \oplus F( R_{15}^{*}\oplus K_{16})\oplus \xout{e}$\\
-	On retrouve ici la même équation que pour une attaque sur le dernier tour de DES. On peut donc l'exploiter de la même façon pour retrouver la clé K. Il faut cependant réussir a identifier $L_{14}$ et $L_{14}^{*}$. La différence de complexités est donc celle de la recherche de ces 2 inconnus.\\
+	$\xout{R_{14}}\oplus  F( R_{15}\oplus K_{16})\oplus  \xout{R_{14}} \oplus \xout{e'} \oplus F( R_{15}^{*}\oplus K_{16})\oplus \xout{e'}$\\
+	On retrouve ici la même équation que pour une attaque sur le dernier tour de DES. On peut donc l'exploiter de la même façon pour retrouver la clé K. Il faut cependant réussir a identifier $R_{14}$ et $R_{14}^{*}$. La différence de complexités est donc celle de la recherche de ces 2 inconnus.\\
+	On peu déjà écrire $L_{16} = (L_{13}\oplus F(R_{13} \ K_{14}))\oplus F(R_{15}\oplus K_{16})$\\
+	$R_{14} = L_{13} \oplus F(R_{13}\oplus K_{14})\\
+	$
+	
 	\subsection{au delà}
 	On constate que plus on remonte dans les tours, plus les valeurs dont on aura besoin pour retrouver K seront compliquées à obtenir. De ce fait cette attaque ne sera pas réaliste sur tout les tour de DES.
 	\section{Question 5}
-		\subsection{contre-mesure par répétition}
-		redondance temporelle
+		Pour pouvoir contrer une attaque par faute, on peux imaginer certaines contre-mesures.
+		\subsection{contre-mesure par répétition} 
+			On peut par exemple exécuter les calculs 2 fois. En émettant l'hypothèse que la faute induite n'affecte qu'une exécution, on peut alors effectuer le même calcul après un certain intervalle de temps. On compare ensuite le résultat de la première exécution avec celui de la seconde. Si les résultat sont les mêmes, on peu considérer le chiffré comme étant bon. S'ils sont différents alors dans ce cas on peu en déduire qu'une faute à été induite.\\
+			Ce procédé est cela dit coûteux car il nécessite d'effectuer plusieurs fois le chiffrement. Si on ne décide de faire qu'un vérification, on ira au mieux 2 fois plus lentement que sans contre-mesures.   
 		\subsection{contre-mesure matérielle}
+			On peut également effectuer le calcul sur 2 unités différentes et comparer le résultat. En émettant l'hypothèse que la faute induite n'affecte qu'un unité de calcul, on peut alors comparer les résultats en sortie pour détecter s'il y a eu une erreur ou non.De plus on peu paralléliser les calculs ce qui n'augmente donc pas le temps d'exécution.   
 		\subsection{autre}
+			Enfin on peut décider d'inclure dans le code des fonctions de test pour vérifier à chaque calcul si le résultat trouvé correspond au résultat attendu. Cette méthode aurait un impact sur le temps de calcul en fonction du nombre de tests effectués durant le chiffrement.
 	\section{Annexe}
 		\subsection{SBoxFinder}
 			\begin{center}\includegraphics[scale=0.4]{screenshots/code/SBOX_FINDER1.png}\end{center} 
