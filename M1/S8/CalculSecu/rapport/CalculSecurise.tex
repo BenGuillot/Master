@@ -209,36 +209,14 @@
 	Avec cette valeur on peut donc obtenir l'équation suivante :\\
 	$L_{16} \oplus L_{16}^{*} \oplus e = $\\ 
 	$\xout{R_{14}}\oplus  F( R_{15}\oplus K_{16})\oplus  \xout{R_{14}} \oplus \xout{e} \oplus F( R_{15}^{*}\oplus K_{16})\oplus \xout{e}$\\
-	On retrouve ici la même équation que pour une attaque sur le dernier tour de DES. On peut donc l'exploiter de la même façon pour retrouver la clé K. Il faut cependant réussir a identifier $L_{15}$ et $L_{15}^{*}$. La différence de complexités est donc celle de la recherche de ces 2 inconnus.\\
-	On peut calculer $L_{15}$ de la façon suivante :\\
-	$L_{15} = L_{16} \oplus F( R_{15}\oplus K_{16}) = L_{15} \oplus  F( R_{15}\oplus K_{16})  \oplus  F( R_{15}\oplus K_{16})$
-	On a donc $2^{9}$ possibilités pour $K_{16}$, et $2^{5}$ possibilités pour $L_{15}^{*}$ ce qui nous fait $2^{14}$. Il faut ensuite refaire le même type de recherche exhaustive que celle décrite dans la question 2 pour chaque couple $(L_{15}, L_{15}^{*})$ possible, ce qui amène la complexité à : $3*2^{10}*2^{14} = 2^{24}$
+	On retrouve ici la même équation que pour une attaque sur le dernier tour de DES. On peut donc l'exploiter de la même façon pour retrouver la clé K. Il faut cependant réussir a identifier $R_{14}$ et $R_{14}^{*}$. La différence de complexités est donc celle de la recherche de ces 2 inconnus.\\
+	En supposant que l'attaquant connaisse $R_{14}$, il devra faire une recherche sur $R_{14}^{*}$ soit $2^{5}$  $R_{14}^{*}$ possibles. Ensuite pour chaque possibilité faire une recherche exhaustive sur $K_{15}$, sur le même principe que celle que nous avons effectué sur $R_{15}$. On va donc cherché pour chaque possibilité 4 bits sur les 8 S-BOX de la fonction F soit un total de $2^{5}*8*4*2^{4} = 2^{14}$. On aura donc une complexité pour retrouver $K_{16}$ de $2^{14} * 3 * 2^{10} = O(2^{24})$.
 	\subsection{attaque sur $R_{13}$ du $13^{ème}$ tour}
 		On va s'intéresser à une attaque $R_{13}$ le $13^{ème}$ tour.\\
-	On aura donc les équations suivantes :
-	\begin{itemize}
-		\item $L_{14}^{*} = R_{13}^{*} = R_{13} \oplus e$
-		\item $R_{14}^{*} = L_{13}\oplus F( R_{13}^{*}\oplus K_{14}) = R_{14} \oplus e'$
-		\item $L_{15}^{*} =R_{14}^{*}$
-		\item $R_{15}^{*} = L_{14}^{*}\oplus F( R_{14}^{*}\oplus K_{15})$
-		\item $L_{16}^{*} = L_{15}^{*}\oplus F( R_{15}^{*}\oplus K_{16})$
-	\end{itemize}
-	Essayons de retrouver la même équation que pour l'attaque sur le $15^{ème}$ tour :\\
-	$L_{16} \oplus L_{16}^{*} = $\\ 
-	$L_{15}\oplus  F( R_{15}\oplus K_{16})\oplus L_{15}^{*} \oplus F( R_{15}^{*}\oplus K_{16})$\\
-	$= R_{14}\oplus  F( R_{15}\oplus K_{16})\oplus  R_{14} \oplus e' \oplus F( R_{15}^{*}\oplus K_{16})$\\
-	On peut retrouver e' de la façon suivante :\\
-	$e' = R_{14}\oplus R_{14}^{*} $
-	Avec cette valeur on peut donc obtenir l'équation suivante :\\
-	$L_{16} \oplus L_{16}^{*} \oplus e' = $\\ 
-	$\xout{R_{14}}\oplus  F( R_{15}\oplus K_{16})\oplus  \xout{R_{14}} \oplus \xout{e'} \oplus F( R_{15}^{*}\oplus K_{16})\oplus \xout{e'}$\\
-	On retrouve ici la même équation que pour une attaque sur le dernier tour de DES. On peut donc l'exploiter de la même façon pour retrouver la clé K. Il faut cependant réussir a identifier $R_{14}$ et $R_{14}^{*}$. La différence de complexités est donc celle de la recherche de ces 2 inconnus.\\
-	On peu déjà écrire $L_{16} = (L_{13}\oplus F(R_{13} \ K_{14}))\oplus F(R_{15}\oplus K_{16})$\\
-	$R_{14} = L_{13} \oplus F(R_{13}\oplus K_{14})\\
-	$
+	On peut appliquer le même raisonnement que pour l'attaque sur le $14^{ème}$, sauf que cette fois si il faudra également retrouver $R_{13}^{*}$. Donc on aura une complexité de la forme $2^{14}*2^{14} * 3 * 2^{10} = O(2^{38})$
 	
 	\subsection{au delà}
-	On constate que plus on remonte dans les tours, plus les valeurs dont on aura besoin pour retrouver K seront compliquées à obtenir. De ce fait cette attaque ne sera pas réaliste sur tout les tour de DES.
+	On constate que plus on remonte dans les tours, plus les valeurs dont on aura besoin pour retrouver K seront compliquées à obtenir. De ce fait cette attaque ne sera pas réaliste sur tout les tour de DES. Si une attaque à lieu sur le $10^{ème}$ tour elle aura une complexité en $O(2^{80})$ et ne sera donc pas réalisable en temps raisonnable.
 	\section{Question 5}
 		Pour pouvoir contrer une attaque par faute, on peux imaginer certaines contre-mesures.
 		\subsection{contre-mesure par répétition} 
