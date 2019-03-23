@@ -13,6 +13,9 @@
 \usepackage{longtable}
 
 \title{\vspace{13em}{\huge Calcul sécurisé - Contrôle continu}}
+\author{Guillot Benjamin,\\
+	21 500 545\\}
+
 
 \begin{document}
 	
@@ -23,15 +26,15 @@
 	\newpage\clearpage\pagenumbering{arabic}
 	
 	\section{Question 1}
-	Une attaque par faute contre le DES consiste à introduire une modification sur un bit du chiffré durant l'exécution du chiffrement de manière a compromettre son execution.De ce fait si on dispose d'un chiffré correct et d'un chiffré fauté par l'attaque on peut obtenir des informations sur une partie de  la clé utilisée pour le chiffrement.
+	Une attaque par faute contre le DES consiste à introduire une modification sur un bit du chiffré durant l'exécution du chiffrement de manière a compromettre son exécution.De ce fait si on dispose d'un chiffré correct et d'un chiffré fauté par l'attaque on peut obtenir des informations sur une partie de  la clé utilisée pour le chiffrement.
 	Lors d'une attaque par force brute (recherche exhaustive) sur la clé du DES, la complexité est de $2^{56}$. Le but d'une telle attaque est donc de réduire cette complexité.\\
 
-	En supposant que l'attaquant est capable d'effectuer une faute sur la valeur de sortie $R_{15}$ du $15_{ème}$ tour une attaque par faute peut être décrite de la façon suivante :\\
+	En supposant que l'attaquant est capable d'effectuer une faute sur la valeur de sortie $R_{15}$ du $15^{ème}$ tour une attaque par faute peut être décrite de la façon suivante :\\
 	
 	
 	\begin{center}\includegraphics[scale=0.4]{screenshots/DES_feistel.png}\end{center}
 	
-	Lors d'une utilisation normal de DES (sans attaque par faute), on obtiendrais les resultats suivant pour $L_{16}$ et $R_{16}$.\\
+	Lors d'une utilisation normal de DES (sans attaque par faute), on obtiendrais les résultats suivant pour $L_{16}$ et $R_{16}$.\\
 	\begin{itemize}
 		\item $L_{16} = L_{15} \oplus F(R_{15}, K_{16})$
 		\item $R_{16} = R_{15}$
@@ -59,7 +62,7 @@
 	On constate que la fonction F prend le bloc $R_{i - 1}$ de 32 bits en entrée ainsi que la clé $K_{i}$. $R_{i - 1}$ passe ensuite par la fonction  E qui a pour but d'appliquer une expansion sur le bloc, le passant ainsi de 32 à 48 bits.\\
 	Après l'expansion, l'opération XOR est appliquée entre $R_{i - 1}$ et $K_{i}$.\\
 	On a donc 48 bits , qui vont être "découpés" en 8 blocs de 6 bits. Chaque bloc va ensuite passer par une S-Box. Les S-Box prennent en entrée 6 bits et en renvoient 4, ce qui permet de ramener la nombre de bit à 32 (soit la taille initiale de $R_{i - 1}$).\\
-	Ce bloc de 32 bits va finalement subir une permutation, la sortie de cette permutation étant le resultat renvoyé par la fonction F.\\
+	Ce bloc de 32 bits va finalement subir une permutation, la sortie de cette permutation étant le résultat renvoyé par la fonction F.\\
 	On peut donc écrire l'équation $L_{16}  \oplus L_{16}^{*} = F(R_{15}, K_{16}) \oplus F(R_{15}^{*}, K_{16})$ de la façon suivante : \\
 	$$L_{16}  \oplus L_{16}^{*} = P(S(E(R_{15})\oplus K_{16})) \oplus P(S(E(R_{15}^{*})\oplus K_{16}))$$
 	
@@ -210,14 +213,14 @@
 	$L_{16} \oplus L_{16}^{*} \oplus e = $\\ 
 	$\xout{R_{14}}\oplus  F( R_{15}\oplus K_{16})\oplus  \xout{R_{14}} \oplus \xout{e} \oplus F( R_{15}^{*}\oplus K_{16})\oplus \xout{e}$\\
 	On retrouve ici la même équation que pour une attaque sur le dernier tour de DES. On peut donc l'exploiter de la même façon pour retrouver la clé K. Il faut cependant réussir a identifier $R_{14}$ et $R_{14}^{*}$. La différence de complexités est donc celle de la recherche de ces 2 inconnus.\\
-	En supposant que l'attaquant connaisse $R_{14}$, il devra faire une recherche sur $R_{14}^{*}$ soit $2^{5}$  $R_{14}^{*}$ possibles. Ensuite pour chaque possibilité faire une recherche exhaustive sur $K_{15}$, sur le même principe que celle que nous avons effectué sur $R_{15}$. On va donc cherché pour chaque possibilité 4 bits sur les 8 S-BOX de la fonction F soit un total de $2^{5}*8*4*2^{4} = 2^{14}$. On aura donc une complexité pour retrouver $K_{16}$ de $2^{14} * 3 * 2^{10} = O(2^{24})$.\\
+	En supposant que l'attaquant connaisse $R_{14}$, il devra faire une recherche sur $R_{14}^{*}$ soit $2^{5}$  $R_{14}^{*}$ possibles pour réussir a retrouver la propagation des bits faux. Ensuite pour chaque possibilité faire une recherche exhaustive sur $K_{15}$, sur le même principe que celle que nous avons effectué sur $R_{15}$. On va donc chercher pour chaque possibilité 4 bits sur les 8 S-BOX de la fonction F soit un total de $2^{5}*8*4*2^{4} = 2^{14}$. On aura donc une complexité pour retrouver $K_{16}$ de $2^{14} * 3 * 2^{10} = O(2^{24})$.\\
 	\small $2^{5}$ représente les possibilités de  $R_{14}^{*}$, $8$ les 8 S-box, $4$ les 4 entrées possibles pour les S-Box et $2^{4}$ les possibilités de sortie de la S-BOX.
 	\subsection{attaque sur $R_{13}$ du $13^{ème}$ tour}
 		On va s'intéresser à une attaque $R_{13}$ le $13^{ème}$ tour.\\
 	On peut appliquer le même raisonnement que pour l'attaque sur le $14^{ème}$, sauf que cette fois si il faudra également retrouver $R_{13}^{*}$. Donc on aura une complexité de la forme $2^{14}*2^{14} * 3 * 2^{10} = O(2^{38})$
 	
 	\subsection{au delà}
-	On constate que plus on remonte dans les tours, plus les valeurs dont on aura besoin pour retrouver K seront compliquées à obtenir. De ce fait cette attaque ne sera pas réaliste sur tout les tour de DES. Si une attaque à lieu sur le $10^{ème}$ tour elle aura une complexité en $O(2^{80})$ et ne sera donc pas réalisable en temps raisonnable.
+	On constate que plus on remonte dans les tours, plus les valeurs dont on aura besoin pour retrouver K seront compliquées à obtenir. De ce fait cette attaque ne sera pas réaliste sur tout les tour de DES. Si une attaque à lieu sur le $10^{ème}$ tour elle aura une complexité en $O(2^{80})$ et ne sera donc pas réalisable en temps raisonnable. Il est également à noter qu'au bout du $11^{ème}$ la complexité atteint $O(2^{66})$ et sera donc plus élevé que celle d'une simple recherche exhaustive de K ($2^{56}$). Il n'est donc pas nécessaire de continuer au delà du $12^{ème}$ si on souhaite garder une complexité moins élevée.
 	\section{Question 5}
 		Pour pouvoir contrer une attaque par faute, on peux imaginer certaines contre-mesures.
 		\subsection{contre-mesure par répétition} 
@@ -236,7 +239,7 @@
 			\begin{center}\includegraphics[scale=0.4]{screenshots/code/SubK16finder2.png}\end{center}
 		\subsection{keyFinder}
 			\begin{center}\includegraphics[scale=0.4]{screenshots/code/KeyFinder.png}\end{center} 
-		\subsection{autres fonction}
+		\subsection{autres fonctions}
 			\begin{center}\includegraphics[scale=0.4]{screenshots/code/Expansion.png}\end{center} 
 			\begin{center}\includegraphics[scale=0.4]{screenshots/code/IPpermut.png}\end{center}
 			\begin{center}\includegraphics[scale=0.4]{screenshots/code/PINVpermut.png}\end{center} 
