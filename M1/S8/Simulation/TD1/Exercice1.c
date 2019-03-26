@@ -120,3 +120,18 @@ int main(){
 
 	return 0;
 }
+/*Loi M 	/ 	M/ 	1 
+	  markovien : poisson, exponnentielle
+	  			sortie
+	  				serveur
+stabilité : lambda < n
+charge : p = (lambda/r)< 1
+
+x : durée d'un phénomène / X ~Exp(lambda)
+		durée moyenne = 1/lambda
+f_x(x) = {lambda * Rho^(-lambda * x) pour tout x > 0
+		 { 0 sinon 
+	fonction de densité : P(X = x) = f_x(x)
+	fonction de repartition (probabilité cumulé)
+	F_x(x)=P(X<=x)= Integrale_(- infini)^x f(t)dt  = 1-Rho^(-lambda*x)
+	==> génération d'un variable aleatoire selon la loi Exp(lambda) */
