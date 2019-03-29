@@ -1,4 +1,0 @@
-#lancer le script : ./scriptSimulation
-gcc Exercice1.c
-./a.out 
-R CMD BATCH "Draw.R"
