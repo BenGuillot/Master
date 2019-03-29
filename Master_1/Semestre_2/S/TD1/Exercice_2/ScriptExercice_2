@@ -1,0 +1,9 @@
+echo "Compilation"
+gcc Exercice2.c -lm
+echo "execution"
+./a.out 
+echo "Compilation R"
+R CMD BATCH "Draw.R"
+echo "affichage"
+xpdf Rplots.pdf
+rm -f a.out

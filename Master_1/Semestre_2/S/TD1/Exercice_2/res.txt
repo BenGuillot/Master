@@ -1,0 +1,5 @@
+lambda = 2      convergence à 0.250257
+lambda = 4      convergence à 0.670827
+lambda = 6      convergence à 1.421577
+lambda = 8      convergence à 4.122846
+lambda = 9      convergence à 9.969626
